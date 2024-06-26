@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OrganizeIt</title>
+    <style>
+        #shelf_container{
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .collapsible {
+            background-color: #f1f1f1;
+            color: #444;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .collapsible .arrow {
+            transition: transform 0.2s;
+            margin-right: 10px;
+        }
+        .active .arrow {
+            transform: rotate(90deg);
+        }
+        .active, .collapsible:hover {
+            background-color: #ccc;
+        }
+
+        .content {
+            padding: 0 0px;
+            display: none;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+
+        .drawer{
+            background-color: #f1f1f1;
+            color: #444;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .drawer:hover {
+            background-color: #dadada;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hi!</h1>
+    <p>Click <a th:href="@{/test}">here</a> to see a greeting!</p>
+    <button onclick="window.location.href='/test';">Test</button>
+    <div id="shelf_container">
+        <p><a href="/test">Schreibtischlade</a></p>
+        <button class="collapsible">
+            <span class="arrow">&#9654;</span> Schreibtisch
+        </button>
+        <div class="content">
+            <!--   <p><a href="/test">Schreibtischlade</a></p>   -->
+            <button class="drawer" onclick="window.location.href='/getDrawer/Schreibtischlade';">Schreibtischlade</button>
+        </div>
+
+        <div class="collapsible-container" th:each="shelf : ${shelves}">
+            <button class="collapsible">
+                <span class="arrow">&#9654;</span><span th:text="${shelf.name}"></span>
+            </button>
+            <div class="content" >
+                <!--   <p><a href="/test">Schreibtischlade</a></p>   -->
+                <div th:each="drawer : ${drawers}" th:if="${drawer.shelf} == ${shelf}">
+                    <button class="drawer"
+                            th:attr="onclick=|window.location.href='/Drawers/' + '${drawer.name}';|"
+                            th:text="${drawer.name}">
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var coll = document.getElementsByClassName("collapsible");
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

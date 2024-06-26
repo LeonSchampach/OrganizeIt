@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OrganizeIt</title>
+    <style>
+        #container{
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Button to add a new Item */
+        .addButton {
+            /*width: fit-content;
+            padding: 5px 25px;
+            margin-top: 25px;
+            margin-left: 50%;
+            transform: translate(-50%);
+            display: inline-block;
+            outline: none;
+            cursor: pointer;
+            background-color: blue;
+            border-radius: 0.25rem;
+            border: 1px solid blue;
+            color: #fff;
+            font-size: 24px;
+            line-height: 30px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            height: 50%;
+        }
+        .modal ul {
+            list-style-type: none;
+        }
+        .modal li {
+            text-align: left;
+            color: black;
+            font-size: 24px;
+            width: fit-content;
+            background-color: white;
+            padding: 20px 20px 0 20px;
+        }
+        .modal li:hover{
+            background-color: white;
+        }
+        .modal input{
+            margin-left: 10px;
+            margin-right: 10px;
+            border-bottom: 1px solid black;
+        }
+
+        /* Button to save the newly created Item */
+        .saveButtonContainer {
+            position: relative;
+            width: 100%;
+            height: 75%;
+            z-index: 1;
+        }
+        .innerDiv{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 th:text="${drawer}"></h1>
+        <ul>
+            <li th:each="item : ${items}">
+                <p th:text="${item.name}"></p>
+            </li>
+        </ul>
+        <button class="addButton" onclick="addItem()">Gegenstand hinzufügen</button>
+    </div>
+
+    <div id="prompt" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <label>Name:<input type="text" id="newItemName"/></label>
+            <label>Beschreibung:<input type="text" id="newItemDesc"/></label>
+            <!--<label>Verlag:
+                <select id="newBookPublisher">
+                    <option th:each="publisher : ${publisherList}" th:id="${publisher.getId()}" th:text="${publisher.getPublisherName()}"></option>
+                </select>
+            </label>
+            <br><br>
+            <label>Autoren:
+                <ul id="newBookAuthors">
+                    <li th:each="author : ${authorList}" ><input type="checkbox" th:id="${author.getId()}" th:text="${author.getFirstname()} + ' ' + ${author.getLastname()}"/></li>
+                </ul>
+            </label>-->
+            <div class="saveButtonContainer"><div class="innerDiv"><button class="addButton" onclick="cancel()">Abbrechen</button><button class="addButton" onclick="saveItem()">Speichern</button></div></div>
+        </div>
+
+    </div>
+
+<script th:inline="javascript">
+    const backendIP = "localhost:8080";
+    const drawerName = /*[[${drawer}]]*/ '';
+    const promptModal = document.getElementById("prompt");
+
+    function addItem(){
+        promptModal.style.display = "block";
+    }
+
+    async function saveItem(){
+        promptModal.style.display = "none";
+        let name = document.getElementById("newItemName").value;
+        let desc = document.getElementById("newItemDesc").value;
+
+        console.log(drawerName);
+        await fetch("http://"+backendIP+"/api/createItem?name="+name+"&desc="+desc+"&drawerName="+drawerName, {method:"POST"});
+
+        document.getElementById("newItemName").value = null;
+        document.getElementById("newItemDesc").value = null;
+
+        //window.location = "http://"+backendIP+":8080/Drawers/"+drawerName;
+    }
+
+    function cancel(){
+        document.getElementById("newItemName").value = null;
+        document.getElementById("newItemDesc").value = null;
+
+        promptModal.style.display = "none";
+        //window.location = "http://"+backendIP+":8080/Drawers/"+drawerName;
+    }
+
+    window.onclick = function(event) {
+        if (event.target === promptModal) {
+            document.getElementById("newItemName").value = null;
+            document.getElementById("newItemDesc").value = null;
+
+            promptModal.style.display = "none";
+            //window.location = "http://"+backendIP+":8080/Drawers/"+drawerName;
+        }
+    }
+</script>
+</body>
+</html>
