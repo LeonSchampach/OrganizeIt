@@ -1,4 +1,4 @@
-package com.schampach.organizeit.db.entity;
+package com.organizeit.db.entity;
 
 import jakarta.persistence.*;
 

@@ -49,7 +49,7 @@ DROP TABLE shelf [90107-224]
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-	at com.schampach.organizeit.OrganizeitApplication.main(OrganizeitApplication.java:10)
+	at com.organizeit.OrganizeitApplication.main(OrganizeitApplication.java:10)
 2024-06-26 14:03:23.504003+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ITEM" not found; SQL statement:
 DROP TABLE item [42102-224]
@@ -95,4 +95,4 @@ DROP TABLE drawer [90107-224]
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-	at com.schampach.organizeit.OrganizeitApplication.main(OrganizeitApplication.java:10)
+	at com.organizeit.OrganizeitApplication.main(OrganizeitApplication.java:10)

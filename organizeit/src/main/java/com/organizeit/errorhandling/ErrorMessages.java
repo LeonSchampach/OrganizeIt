@@ -1,4 +1,4 @@
-package com.schampach.organizeit.errorhandling;
+package com.organizeit.errorhandling;
 
 /**
  * The ErrorMessages enum provides centralized error messages used

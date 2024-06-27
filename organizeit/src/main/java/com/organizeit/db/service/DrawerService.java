@@ -1,15 +1,14 @@
-package com.schampach.organizeit.db.service;
+package com.organizeit.db.service;
 
-import com.schampach.organizeit.db.entity.Drawer;
-import com.schampach.organizeit.db.entity.Item;
-import com.schampach.organizeit.db.repository.DrawerRepository;
-import com.schampach.organizeit.db.repository.ItemRepository;
+import com.organizeit.db.entity.Item;
+import com.organizeit.db.repository.ItemRepository;
+import com.organizeit.db.entity.Drawer;
+import com.organizeit.db.repository.DrawerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class DrawerService {

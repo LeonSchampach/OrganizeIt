@@ -1,7 +1,7 @@
-package com.schampach.organizeit.db.service;
+package com.organizeit.db.service;
 
-import com.schampach.organizeit.db.entity.Shelf;
-import com.schampach.organizeit.db.repository.ShelfRepository;
+import com.organizeit.db.entity.Shelf;
+import com.organizeit.db.repository.ShelfRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

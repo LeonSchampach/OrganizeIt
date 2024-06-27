@@ -59,19 +59,7 @@
     </style>
 </head>
 <body>
-    <h1>Hi!</h1>
-    <p>Click <a th:href="@{/test}">here</a> to see a greeting!</p>
-    <button onclick="window.location.href='/test';">Test</button>
     <div id="shelf_container">
-        <p><a href="/test">Schreibtischlade</a></p>
-        <button class="collapsible">
-            <span class="arrow">&#9654;</span> Schreibtisch
-        </button>
-        <div class="content">
-            <!--   <p><a href="/test">Schreibtischlade</a></p>   -->
-            <button class="drawer" onclick="window.location.href='/getDrawer/Schreibtischlade';">Schreibtischlade</button>
-        </div>
-
         <div class="collapsible-container" th:each="shelf : ${shelves}">
             <button class="collapsible">
                 <span class="arrow">&#9654;</span><span th:text="${shelf.name}"></span>
@@ -86,7 +74,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 <script>

@@ -1,21 +1,15 @@
-package com.schampach.organizeit;
+package com.organizeit.controller;
 
-import com.schampach.organizeit.db.entity.Drawer;
-import com.schampach.organizeit.db.entity.Item;
-import com.schampach.organizeit.db.entity.Shelf;
-import com.schampach.organizeit.db.repository.DrawerRepository;
-import com.schampach.organizeit.db.repository.ShelfRepository;
-import com.schampach.organizeit.db.service.DrawerService;
-import com.schampach.organizeit.db.service.ItemService;
-import com.schampach.organizeit.db.service.ShelfService;
+import com.organizeit.db.entity.Drawer;
+import com.organizeit.db.entity.Item;
+import com.organizeit.db.entity.Shelf;
+import com.organizeit.db.service.DrawerService;
+import com.organizeit.db.service.ItemService;
+import com.organizeit.db.service.ShelfService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 //@org.springframework.stereotype.Controller

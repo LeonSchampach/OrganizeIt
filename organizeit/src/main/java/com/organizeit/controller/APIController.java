@@ -1,9 +1,9 @@
-package com.schampach.organizeit;
+package com.organizeit.controller;
 
-import com.schampach.organizeit.db.entity.Item;
-import com.schampach.organizeit.db.service.DrawerService;
-import com.schampach.organizeit.db.service.ItemService;
-import com.schampach.organizeit.errorhandling.ErrorMessages;
+import com.organizeit.db.entity.Item;
+import com.organizeit.db.service.DrawerService;
+import com.organizeit.db.service.ItemService;
+import com.organizeit.errorhandling.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

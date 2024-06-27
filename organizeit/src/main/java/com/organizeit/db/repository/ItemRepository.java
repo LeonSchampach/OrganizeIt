@@ -1,7 +1,7 @@
-package com.schampach.organizeit.db.repository;
+package com.organizeit.db.repository;
 
-import com.schampach.organizeit.db.entity.Drawer;
-import com.schampach.organizeit.db.entity.Item;
+import com.organizeit.db.entity.Drawer;
+import com.organizeit.db.entity.Item;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
