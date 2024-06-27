@@ -80,25 +80,44 @@ OrganizeIt is a Spring Boot application designed to help you organize your shelv
  `schema.sql`
  ```sql
 CREATE TABLE IF NOT EXISTS shelf (
-    name VARCHAR(255) PRIMARY KEY,
-    room VARCHAR(255)
+                       name VARCHAR(255) NOT NULL,
+                       room VARCHAR(255),
+                       PRIMARY KEY (name)
 );
 
 CREATE TABLE IF NOT EXISTS drawer (
-    name VARCHAR(255) PRIMARY KEY,
-    shelf_name VARCHAR(255),
-    CONSTRAINT FK_shelf FOREIGN KEY (shelf_name) REFERENCES shelf(name)
+                        name VARCHAR(255) NOT NULL,
+                        shelf_name VARCHAR(255),
+                        PRIMARY KEY (name),
+                        CONSTRAINT fk_shelf FOREIGN KEY (shelf_name) REFERENCES shelf(name)
+);
+CREATE TABLE IF NOT EXISTS item (
+                        id LONG NOT NULL AUTO_INCREMENT,
+                        name VARCHAR(255) NOT NULL,
+                        desc VARCHAR(255),
+                        drawer_name VARCHAR(255),
+                        PRIMARY KEY (name),
+                        CONSTRAINT fk_drawer FOREIGN KEY (drawer_name) REFERENCES drawer(name)
 );
 ```
 
 `data.sql`
  ```sql
-INSERT INTO shelf (name, room) VALUES ('Shelf1', 'Room1');
-INSERT INTO shelf (name, room) VALUES ('Shelf2', 'Room2');
+-- Insert data into the shelf table
+INSERT INTO shelf (name, room) VALUES ('Schreibtisch', 'Leons Zimmer');
+INSERT INTO shelf (name, room) VALUES ('Shelf2', 'RoomB');
+INSERT INTO shelf (name, room) VALUES ('Shelf3', 'RoomC');
 
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer1', 'Shelf1');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer2', 'Shelf1');
+-- Insert data into the drawer table
+INSERT INTO drawer (name, shelf_name) VALUES ('Schreibtischlade', 'Schreibtisch');
+INSERT INTO drawer (name, shelf_name) VALUES ('Drawer2', 'Schreibtisch');
 INSERT INTO drawer (name, shelf_name) VALUES ('Drawer3', 'Shelf2');
+INSERT INTO drawer (name, shelf_name) VALUES ('Drawer4', 'Shelf2');
+INSERT INTO drawer (name, shelf_name) VALUES ('Drawer5', 'Shelf3');
+INSERT INTO drawer (name, shelf_name) VALUES ('Drawer6', 'Shelf3');
+
+-- Insert data into the item table
+INSERT INTO item (name, desc, drawer_name) VALUES ('USB-Stick', '8GB, HTL-Wels Diplomarbeits USB-Stick', 'Schreibtischlade');
 ```
 
 ## License
