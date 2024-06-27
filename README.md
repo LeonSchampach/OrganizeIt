@@ -28,7 +28,7 @@ OrganizeIt is a Spring Boot application designed to help you organize your shelv
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/OrganizeIt.git
+   git clone https://github.com/LeonSchampach/OrganizeIt.git
    cd OrganizeIt
 
 2. **Build the project:**
@@ -76,6 +76,8 @@ OrganizeIt is a Spring Boot application designed to help you organize your shelv
  ## Example SQL Data
  
  Here are example `schema.sql` and `data.sql` files to initialize the H2 database.
+ 
+ ❗ Note: At the moment the tables created in the `schema.sql` file get dropped after every restart for testing purposes. ❗
 
  `schema.sql`
  ```sql
@@ -102,22 +104,26 @@ CREATE TABLE IF NOT EXISTS item (
 ```
 
 `data.sql`
+
+This file does is not necessary. If you dont want the database to have any data in the beginning you can leave the file empty or delete it.
  ```sql
 -- Insert data into the shelf table
-INSERT INTO shelf (name, room) VALUES ('Schreibtisch', 'Leons Zimmer');
+INSERT INTO shelf (name, room) VALUES ('Shelf1', 'RoomA');
 INSERT INTO shelf (name, room) VALUES ('Shelf2', 'RoomB');
 INSERT INTO shelf (name, room) VALUES ('Shelf3', 'RoomC');
 
 -- Insert data into the drawer table
-INSERT INTO drawer (name, shelf_name) VALUES ('Schreibtischlade', 'Schreibtisch');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer2', 'Schreibtisch');
+INSERT INTO drawer (name, shelf_name) VALUES ('Drawer1', 'Shelf1');
+INSERT INTO drawer (name, shelf_name) VALUES ('Drawer2', 'Shelf1');
 INSERT INTO drawer (name, shelf_name) VALUES ('Drawer3', 'Shelf2');
 INSERT INTO drawer (name, shelf_name) VALUES ('Drawer4', 'Shelf2');
 INSERT INTO drawer (name, shelf_name) VALUES ('Drawer5', 'Shelf3');
 INSERT INTO drawer (name, shelf_name) VALUES ('Drawer6', 'Shelf3');
 
 -- Insert data into the item table
-INSERT INTO item (name, desc, drawer_name) VALUES ('USB-Stick', '8GB, HTL-Wels Diplomarbeits USB-Stick', 'Schreibtischlade');
+INSERT INTO item (name, desc, drawer_name) VALUES ('Item1', 'Description1', 'Drawer1');
+INSERT INTO item (name, desc, drawer_name) VALUES ('Item2', 'Description2', 'Drawer2');
+INSERT INTO item (name, desc, drawer_name) VALUES ('Item3', 'Description3', 'Drawer3');
 ```
 
 ## License
