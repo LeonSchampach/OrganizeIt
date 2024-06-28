@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>OrganizeIt</title>
     <style>
+
+
+        /* ------------- */
+
         h1{
             text-align: center;
         }
@@ -93,6 +97,18 @@
             margin-bottom: 25px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
+        #saveBtn{
+            background-color: limegreen;
+        }
+        #saveBtn:hover{
+            background-color: green;
+        }
+        #cancelBtn{
+            background-color: red;
+        }
+        #cancelBtn:hover{
+             background-color: darkred;
+        }
 
         /* The Modal (background) */
         .modal {
@@ -145,6 +161,7 @@
             height: fit-content;
         }
 
+        /* Input Fields for the new Drawers in the Modal */
         #drawerInputs{
             width: fit-content;
         }
@@ -152,17 +169,49 @@
             margin-bottom: 10px;
             width: fit-content;
         }
+        .drawer-input input{
+            border: none;
+            border-bottom: 1px solid gray;
+        }
+        .drawer-input input:focus{
+            border: none;
+            outline: none;
+            border-bottom: 1px solid dodgerblue;
+        }
+        .drawer-input input[type="text"]:focus::placeholder{
+            color: dodgerblue;
+        }
 
-        .modal-form{
+        /* Label for the Drawer Inputs in the Modal */
+        #drawer-label{
             margin-top: 5px;
             margin-bottom: 5px;
             width: fit-content;
         }
+
+        /* Input Fields for name and room of the shelf in the Modal */
+        .input-box{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .input-box input{
+            border: none;
+            border-bottom: 1px solid gray;
+        }
+        .input-box input:focus{
+            border: none;
+            outline: none;
+            border-bottom: 1px solid dodgerblue;
+        }
+        .input-box input[type="text"]:focus::placeholder{
+            color: dodgerblue;
+        }
+
     </style>
 </head>
 <body>
     <h1>Regale</h1>
-    <button class="addButton" id="addBtn1" onclick="addShelf()">&#x2795; Regal hinzufügen</button>
+    <button id="addBtn1" onclick="addShelf()">&#x2795; Regal hinzufügen</button>
     <div id="shelf_container">
         <div class="collapsible-container" th:each="shelf : ${shelves}">
             <button class="collapsible">
@@ -183,19 +232,19 @@
     <div id="prompt" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-            <div class="modal-form"><label>Name:<input type="text" id="newShelfName"/></label></div>
-            <div class="modal-form"><label>Raum:<input type="text" id="newShelfRoom"/></label></div>
+            <div class="input-box"><label>Name:<input type="text" id="newShelfName" placeholder="Name"/></label></div>
+            <div class="input-box"><label>Raum:<input type="text" id="newShelfRoom" placeholder="Raum"/></label></div>
 
             <div id="drawerInputs">
-                <div class="modal-form"><label>Laden:</label></div>
+                <div id="drawer-label"><label>Laden:</label></div>
                 <div class="drawer-input">
                     <input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">
                 </div>
             </div>
 
             <button type="button" id="addDrawerButton">&#x2795; Lade hinzufügen</button>
-
-            <div class="saveButtonContainer"><button class="addButton" onclick="cancel()">Abbrechen</button>   <button class="addButton" onclick="saveShelf()">Speichern</button></div>
+            <hr>
+            <div class="saveButtonContainer"><button id="cancelBtn" onclick="cancel()">Abbrechen</button>   <button id="saveBtn" onclick="saveShelf()">Speichern</button></div>
         </div>
     </div>
 
@@ -214,7 +263,7 @@
         drawerInputs.appendChild(newDrawerInput);
     });
 
-    async function saveShelf(){
+    async function saveShelf() {
         promptModal.style.display = "none";
 
         const shelfName = document.getElementById('newShelfName').value;
@@ -226,7 +275,7 @@
         const shelfData = {
             name: shelfName,
             room: shelfRoom,
-            drawers: drawerNames.map(name => ({ name: name }))
+            drawers: drawerNames.map(name => ({name: name}))
         };
 
         await fetch('/api/createShelf', {
@@ -254,12 +303,26 @@
         document.getElementById("newShelfName").value = null;
         document.getElementById("newShelfRoom").value = null;
 
+        const drawerInputs = document.getElementById('drawerInputs');
+        drawerInputs.innerHTML = '<div id="drawer-label"><label>Laden:</label></div>';
+        const newDrawerInput = document.createElement('div');
+        newDrawerInput.classList.add('drawer-input');
+        newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
+        drawerInputs.appendChild(newDrawerInput);
+
         location.reload();
     }
 
-    function cancel(){
+    function cancel() {
         document.getElementById("newShelfName").value = null;
         document.getElementById("newShelfRoom").value = null;
+
+        const drawerInputs = document.getElementById('drawerInputs');
+        drawerInputs.innerHTML = '<div id="drawer-label"><label>Laden:</label></div>';
+        const newDrawerInput = document.createElement('div');
+        newDrawerInput.classList.add('drawer-input');
+        newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
+        drawerInputs.appendChild(newDrawerInput);
 
         promptModal.style.display = "none";
     }
@@ -268,6 +331,13 @@
         if (event.target === promptModal) {
             document.getElementById("newShelfName").value = null;
             document.getElementById("newShelfRoom").value = null;
+
+            const drawerInputs = document.getElementById('drawerInputs');
+            drawerInputs.innerHTML = '<div id="drawer-label"><label>Laden:</label></div>';
+            const newDrawerInput = document.createElement('div');
+            newDrawerInput.classList.add('drawer-input');
+            newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
+            drawerInputs.appendChild(newDrawerInput);
 
             promptModal.style.display = "none";
         }
