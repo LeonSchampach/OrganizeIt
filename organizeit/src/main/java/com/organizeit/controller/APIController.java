@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -163,13 +162,13 @@ public class APIController {
             shelf.setName(shelfDto.getName());
             shelf.setRoom(shelfDto.getRoom());
 
-            Set<Drawer> drawers = shelfDto.getDrawers().stream()
+            List<Drawer> drawers = shelfDto.getDrawers().stream()
                     .map(drawerDto -> {
                         Drawer drawer = new Drawer();
                         drawer.setName(drawerDto.getName());
                         return drawer;
                     })
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
 
             shelf.setDrawers(drawers);
 

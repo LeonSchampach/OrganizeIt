@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table
@@ -20,7 +20,7 @@ public class Drawer {
 
     @OneToMany(mappedBy = "drawer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private Set<Item> items;
+    private List<Item> items;
 
     // Getters and Setters
     public String getName() {
@@ -39,11 +39,11 @@ public class Drawer {
         this.shelf = shelf;
     }
 
-    public Set<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(Set<Item> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 }
