@@ -1,5 +1,7 @@
 package com.organizeit.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -13,9 +15,11 @@ public class Drawer {
 
     @ManyToOne
     @JoinColumn(name = "shelf_name", referencedColumnName = "name")
+    @JsonBackReference
     private Shelf shelf;
 
     @OneToMany(mappedBy = "drawer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Item> items;
 
     // Getters and Setters

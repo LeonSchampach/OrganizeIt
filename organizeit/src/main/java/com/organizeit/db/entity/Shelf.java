@@ -1,5 +1,6 @@
 package com.organizeit.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -15,6 +16,7 @@ public class Shelf {
     private String room;
 
     @OneToMany(mappedBy = "shelf", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Drawer> drawers;
 
     // Getters and Setters

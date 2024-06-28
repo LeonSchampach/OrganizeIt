@@ -107,17 +107,6 @@
         <div class="modal-content">
             <label>Name:<input type="text" id="newItemName"/></label>
             <label>Beschreibung:<input type="text" id="newItemDesc"/></label>
-            <!--<label>Verlag:
-                <select id="newBookPublisher">
-                    <option th:each="publisher : ${publisherList}" th:id="${publisher.getId()}" th:text="${publisher.getPublisherName()}"></option>
-                </select>
-            </label>
-            <br><br>
-            <label>Autoren:
-                <ul id="newBookAuthors">
-                    <li th:each="author : ${authorList}" ><input type="checkbox" th:id="${author.getId()}" th:text="${author.getFirstname()} + ' ' + ${author.getLastname()}"/></li>
-                </ul>
-            </label>-->
             <div class="saveButtonContainer"><div class="innerDiv"><button class="addButton" onclick="cancel()">Abbrechen</button><button class="addButton" onclick="saveItem()">Speichern</button></div></div>
         </div>
 

@@ -1,8 +1,12 @@
 package com.organizeit.controller;
 
+import com.organizeit.db.dto.ShelfDto;
+import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.entity.Item;
+import com.organizeit.db.entity.Shelf;
 import com.organizeit.db.service.DrawerService;
 import com.organizeit.db.service.ItemService;
+import com.organizeit.db.service.ShelfService;
 import com.organizeit.errorhandling.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The BookController class handles HTTP requests related to book entities within
@@ -29,6 +36,9 @@ public class APIController {
 
     @Autowired
     private DrawerService drawerService;
+
+    @Autowired
+    private ShelfService shelfService;
 
     /**
      * Retrieves a book from the database based on its ISBN.
@@ -141,70 +151,36 @@ public class APIController {
     }
 
     /**
-     * Fetches book information from the Google Books API based on the book's ISBN.
+     * Creates a new shelf in the database.
      *
-     * @param isbn The ISBN of the book for which to fetch information.
-     * @return A ResponseEntity containing a BookApiInformations object with the retrieved
-     * book data (title, authors, publisher) or an appropriate error response.
+     * @param shelfDto        Dto with all the data of the shelf.
+     * @return A ResponseEntity indicating success or an appropriate error response.
      */
-    /*@GetMapping("/getBookApiInformationsByIsbn")
-    public ResponseEntity<?> getBookApiInformationsByIsbn(@RequestParam String isbn) {
-        try {
-            String decodeIsbn = URLDecoder.decode(isbn, StandardCharsets.UTF_8);
-            URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:" + decodeIsbn);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setRequestMethod("GET");
-            int responseCode = httpURLConnection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                StringBuilder response = new StringBuilder();
-                while ((line = bufferedReader.readLine()) != null) {
-                    response.append(line);
-                }
-                inputStream.close();
-                httpURLConnection.disconnect();
-                JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
-                JsonArray jsonArray = jsonObject.getAsJsonArray("items");
-                String selfLink = null;
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    JsonObject jsonSingleObject = jsonArray.get(i).getAsJsonObject();
-                    if (jsonSingleObject.get("selfLink").getAsString() != null) {
-                        selfLink = jsonSingleObject.get("selfLink").getAsString();
-                    }
-                }
-                if (selfLink != null) {
-                    url = new URL(selfLink);
-                    httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod("GET");
-                    if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        inputStream = httpURLConnection.getInputStream();
-                        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                        response = new StringBuilder();
-                        while ((line = bufferedReader.readLine()) != null) {
-                            response.append(line);
-                        }
-                        inputStream.close();
-                        httpURLConnection.disconnect();
+    @PostMapping("/createShelf")
+    public ResponseEntity<?> createShelf(@RequestBody ShelfDto shelfDto) {
+        try{
+            Shelf shelf = new Shelf();
+            shelf.setName(shelfDto.getName());
+            shelf.setRoom(shelfDto.getRoom());
 
-                        jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
-                        JsonObject bookObject = jsonObject.get("volumeInfo").getAsJsonObject();
-                        String title = bookObject.get("title").getAsString();
-                        JsonArray jsonAuthors = bookObject.getAsJsonArray("authors");
-                        ArrayList<String> authors = new ArrayList<>();
-                        for (int i = 0; i < jsonArray.size(); i++) {
-                            authors.add(jsonAuthors.get(i).getAsString());
-                        }
-                        String publisher = bookObject.get("publisher").getAsString();
+            Set<Drawer> drawers = shelfDto.getDrawers().stream()
+                    .map(drawerDto -> {
+                        Drawer drawer = new Drawer();
+                        drawer.setName(drawerDto.getName());
+                        return drawer;
+                    })
+                    .collect(Collectors.toSet());
 
-                        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(new BookApiInformations(title, authors, publisher).toJson());
-                    }
-                }
+            shelf.setDrawers(drawers);
+
+            Shelf createdShelf = shelfService.createShelf(shelf);
+            if(createdShelf != null){
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdShelf);
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
             }
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
-        } catch (Exception e) {
+        } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
         }
-    }*/
+    }
 }

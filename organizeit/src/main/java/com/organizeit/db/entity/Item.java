@@ -1,5 +1,6 @@
 package com.organizeit.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +18,7 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "drawer_name", referencedColumnName = "name")
+    @JsonBackReference
     private Drawer drawer;
 
     //Constructor

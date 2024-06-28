@@ -1,9 +1,11 @@
 package com.organizeit.db.service;
 
+import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.entity.Shelf;
 import com.organizeit.db.repository.ShelfRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,15 @@ import java.util.List;
 public class ShelfService {
     @Autowired
     ShelfRepository shelfRepository;
+
+    @Transactional
+    public Shelf createShelf(Shelf shelf) {
+        // Ensure bidirectional relationship
+        for (Drawer drawer : shelf.getDrawers()) {
+            drawer.setShelf(shelf);
+        }
+        return shelfRepository.save(shelf);
+    }
 
     //getting all Shelf records
     public List<Shelf> getAllShelf(){
