@@ -11,6 +11,7 @@
             max-width: fit-content;
             margin-left: auto;
             margin-right: auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
         .collapsible {
             background-color: #f1f1f1;
@@ -61,7 +62,11 @@
         }
 
         /* Button to add a new Item */
-        .addButton {
+        button {
+            border: none;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            padding: 10px 15px;
             /*width: fit-content;
             padding: 5px 25px;
             margin-top: 25px;
@@ -78,6 +83,15 @@
             line-height: 30px;
             text-align: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
+        }
+        button:hover {
+            background-color: #dadada;
+        }
+        #addBtn1{
+            margin-left: 50%;
+            transform: translate(-50%);
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
 
         /* The Modal (background) */
@@ -101,8 +115,9 @@
             margin: auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
-            height: 50%;
+            width: fit-content;
+            /*width: 80%;
+            height: 50%;*/
         }
         .modal ul {
             list-style-type: none;
@@ -124,29 +139,30 @@
             border-bottom: 1px solid black;
         }
 
-        /* Button to save the newly created Item */
-        .saveButtonContainer {
-            position: relative;
-            width: 100%;
-            height: 75%;
-            z-index: 1;
-        }
-        .innerDiv{
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 50px;
-            z-index: 1;
+        .saveButtonContainer{
+            margin-top: 15px;
+            width: fit-content;
+            height: fit-content;
         }
 
+        #drawerInputs{
+            width: fit-content;
+        }
         .drawer-input {
             margin-bottom: 10px;
+            width: fit-content;
+        }
+
+        .modal-form{
+            margin-top: 5px;
+            margin-bottom: 5px;
+            width: fit-content;
         }
     </style>
 </head>
 <body>
     <h1>Regale</h1>
-    <button class="addButton" onclick="addShelf()">Regal hinzufügen</button>
+    <button class="addButton" id="addBtn1" onclick="addShelf()">&#x2795; Regal hinzufügen</button>
     <div id="shelf_container">
         <div class="collapsible-container" th:each="shelf : ${shelves}">
             <button class="collapsible">
@@ -167,25 +183,23 @@
     <div id="prompt" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-            <label>Name:<input type="text" id="newShelfName"/></label>
-            <label>Raum:<input type="text" id="newShelfRoom"/></label>
+            <div class="modal-form"><label>Name:<input type="text" id="newShelfName"/></label></div>
+            <div class="modal-form"><label>Raum:<input type="text" id="newShelfRoom"/></label></div>
 
             <div id="drawerInputs">
-                <label>Laden:</label><br>
+                <div class="modal-form"><label>Laden:</label></div>
                 <div class="drawer-input">
-                    <input type="text" name="drawerName" class="drawerName" placeholder="Drawer Name">
+                    <input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">
                 </div>
             </div>
 
-            <button type="button" id="addDrawerButton">Lade hinzufügen</button><br><br>
+            <button type="button" id="addDrawerButton">&#x2795; Lade hinzufügen</button>
 
-            <div class="saveButtonContainer"><div class="innerDiv"><button class="addButton" onclick="cancel()">Abbrechen</button><button class="addButton" onclick="saveShelf()">Speichern</button></div></div>
+            <div class="saveButtonContainer"><button class="addButton" onclick="cancel()">Abbrechen</button>   <button class="addButton" onclick="saveShelf()">Speichern</button></div>
         </div>
     </div>
 
 <script th:inline="javascript">
-    const backendIP = "localhost:8080";
-    const drawerName = /*[[${drawer}]]*/ '';
     const promptModal = document.getElementById("prompt");
 
     function addShelf(){
@@ -196,7 +210,7 @@
         const drawerInputs = document.getElementById('drawerInputs');
         const newDrawerInput = document.createElement('div');
         newDrawerInput.classList.add('drawer-input');
-        newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Drawer Name">';
+        newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
         drawerInputs.appendChild(newDrawerInput);
     });
 
