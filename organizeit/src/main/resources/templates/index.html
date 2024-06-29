@@ -25,7 +25,7 @@
             border: none;
             text-align: left;
             outline: none;
-            font-size: 15px;
+            font-size: 12pt;
             display: flex;
             align-items: center;
         }
@@ -56,7 +56,7 @@
             border: none;
             text-align: left;
             outline: none;
-            font-size: 15px;
+            font-size: 12pt;
             display: flex;
             align-items: center;
         }
@@ -66,10 +66,12 @@
 
         /* Button to add a new Item */
         button {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12pt;
             border: none;
             background-color: #f1f1f1;
             cursor: pointer;
-            padding: 10px 15px;
+            padding: 5px 10px;
             /*width: fit-content;
             padding: 5px 25px;
             margin-top: 25px;
@@ -90,23 +92,31 @@
         button:hover {
             background-color: #dadada;
         }
-        #addBtn1{
+        #addShelfButton{
             margin-left: 50%;
             transform: translate(-50%);
             margin-bottom: 25px;
+            padding: 10px 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
+        #addDrawerButton{
+            padding: 5px 10px;
+        }
         #saveBtn{
-            background-color: limegreen;
+            background-color: #2962ff;
+            color: white;
         }
         #saveBtn:hover{
-            background-color: green;
+            background-color: #2454d8;
+            transform: translateY(-3px);
         }
         #cancelBtn{
-            background-color: red;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 2px;
         }
         #cancelBtn:hover{
-             background-color: darkred;
+            transform: translateY(-3px);
         }
 
         /* The Modal (background) */
@@ -210,7 +220,7 @@
 </head>
 <body>
     <h1>Regale</h1>
-    <button id="addBtn1" onclick="addShelf()">&#x2795; Regal hinzufügen</button>
+    <button id="addShelfButton" onclick="addShelf()">&#x2795; Regal hinzufügen</button>
     <div id="shelf_container">
         <div class="collapsible-container" th:each="shelf : ${shelves}">
             <button class="collapsible">
