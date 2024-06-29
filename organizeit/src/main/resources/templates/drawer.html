@@ -7,14 +7,31 @@
         body{
             font-family: 'Courier New', Courier, monospace;
         }
-        #container{
+        h1{
+            text-align: center;
+        }
+        #item-container{
             max-width: fit-content;
             margin-left: auto;
             margin-right: auto;
         }
+        #input-container{
+            display: grid;
+            grid-template-columns: 1fr;
+            width: 100%;
+            max-width: 400px;
+            gap: 10px;
+            padding: 10px;
+        }
 
         /* Button to add a new Item */
-        .addButton {
+        button {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12pt;
+            border: none;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            padding: 5px 10px;
             /*width: fit-content;
             padding: 5px 25px;
             margin-top: 25px;
@@ -31,6 +48,37 @@
             line-height: 30px;
             text-align: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
+        }
+        button:hover {
+            background-color: #dadada;
+        }
+        #addItemButton{
+            margin-left: 50%;
+            transform: translate(-50%);
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+        #saveBtn{
+            background-color: #2962ff;
+            color: white;
+        }
+        #saveBtn:hover{
+            /*background-color: #2454d8;*/
+            transform: translateY(-3px);
+        }
+        #cancelBtn{
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 2px;
+        }
+        #cancelBtn:hover{
+            transform: translateY(-3px);
+        }
+        .saveButtonContainer{
+            margin-top: 15px;
+            width: fit-content;
+            height: fit-content;
         }
 
         /* The Modal (background) */
@@ -54,22 +102,10 @@
             margin: auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
-            height: 50%;
-        }
-        .modal ul {
-            list-style-type: none;
-        }
-        .modal li {
-            text-align: left;
-            color: black;
-            font-size: 24px;
             width: fit-content;
-            background-color: white;
-            padding: 20px 20px 0 20px;
-        }
-        .modal li:hover{
-            background-color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+            /*width: 80%;
+            height: 50%;*/
         }
         .modal input{
             margin-left: 10px;
@@ -77,40 +113,63 @@
             border-bottom: 1px solid black;
         }
 
-        /* Button to save the newly created Item */
-        .saveButtonContainer {
-            position: relative;
-            width: 100%;
-            height: 75%;
-            z-index: 1;
+        /* Input Fields for name and room of the shelf in the Modal */
+        .input-box{
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
-        .innerDiv{
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 50px;
-            z-index: 1;
+        .input-box input{
+            border: none;
+            border-bottom: 1px solid gray;
+        }
+        .input-box input:focus{
+            border: none;
+            outline: none;
+            border-bottom: 1px solid dodgerblue;
+        }
+        .input-box input[type="text"]:focus::placeholder{
+            color: dodgerblue;
+        }
+
+        /* Item List */
+        ul{
+            list-style-type: none;
+            padding: 0;
+        }
+        li{
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 5px;
+        }
+        ul p{
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <h1 th:text="${drawer}"></h1>
+    <h1 th:text="${drawer}"></h1>
+    <button id="addItemButton" onclick="addItem()">&#x2795; Gegenstand hinzufügen</button>
+    <div id="item-container">
         <ul>
             <li th:each="item : ${items}">
                 <p th:text="${item.name}"></p>
             </li>
         </ul>
-        <button class="addButton" onclick="addItem()">Gegenstand hinzufügen</button>
     </div>
 
     <div id="prompt" class="modal">
 
         <!-- Modal content -->
         <div class="modal-content">
-            <label>Name:<input type="text" id="newItemName"/></label>
-            <label>Beschreibung:<input type="text" id="newItemDesc"/></label>
-            <div class="saveButtonContainer"><div class="innerDiv"><button class="addButton" onclick="cancel()">Abbrechen</button><button class="addButton" onclick="saveItem()">Speichern</button></div></div>
+            <!--<label>Name:<input type="text" id="newItemName"/></label>
+            <label>Beschreibung:<input type="text" id="newItemDesc"/></label>-->
+            <div id="input-container">
+                <div class="input-box"><label>Name:<input type="text" id="newItemName" placeholder="Name"/></label></div>
+                <div class="input-box"><label>Beschreibung:<input type="text" id="newItemDesc" placeholder="Beschreibung"/></label></div>
+                <div class="input-box"><label>Menge:<input type="number" id="newItemQuantity" placeholder="Menge"/></label></div>
+            </div>
+
+            <div class="saveButtonContainer"><button id="cancelBtn" onclick="cancel()">Abbrechen</button>   <button id="saveBtn" onclick="saveItem()">Speichern</button></div>
         </div>
 
     </div>
