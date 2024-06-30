@@ -10,19 +10,32 @@ import java.util.List;
 @Table
 public class Drawer {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     @Column
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "shelf_name", referencedColumnName = "name")
-    @JsonBackReference
-    private Shelf shelf;
+    @Column(name = "shelf_id", nullable = false)
+    private int shelfId;
 
-    @OneToMany(mappedBy = "drawer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Item> items;
+    //Constructor
+    public Drawer(String name, int shelfId) {
+        this.name = name;
+        this.shelfId = shelfId;
+    }
+    public Drawer(){
+    }
 
     // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -31,19 +44,11 @@ public class Drawer {
         this.name = name;
     }
 
-    public Shelf getShelf() {
-        return shelf;
+    public int getShelfId() {
+        return shelfId;
     }
 
-    public void setShelf(Shelf shelf) {
-        this.shelf = shelf;
-    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setShelfId(int shelfId) {
+        this.shelfId = shelfId;
     }
 }

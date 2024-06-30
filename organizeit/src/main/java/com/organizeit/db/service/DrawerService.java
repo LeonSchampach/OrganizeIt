@@ -1,11 +1,14 @@
 package com.organizeit.db.service;
 
 import com.organizeit.db.entity.Item;
+import com.organizeit.db.entity.Shelf;
 import com.organizeit.db.repository.ItemRepository;
 import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.repository.DrawerRepository;
+import com.organizeit.db.repository.ShelfRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,13 @@ public class DrawerService {
 
     @Autowired
     ItemRepository itemRepository;
+    @Autowired
+    private ShelfRepository shelfRepository;
+
+    @Transactional
+    public Drawer createDrawer(Drawer drawer) {
+        return drawerRepository.save(drawer);
+    }
 
     //getting all Drawer records
     public List<Drawer> getAllDrawer(){
@@ -26,11 +36,11 @@ public class DrawerService {
     }
 
     //getting a specific record
-    public Drawer getDrawerByName(String name){
-        if(drawerRepository.findById(name).isEmpty()){
+    public Drawer getDrawerById(int id){
+        if(drawerRepository.findById(id).isEmpty()){
             return null;
         }
-        return drawerRepository.findById(name).get();
+        return drawerRepository.findById(id).get();
     }
 
     //saving/updating a specific record
@@ -39,15 +49,14 @@ public class DrawerService {
     }
 
     //deleting a specific record
-    public void deleteDrawer(String name){
-        drawerRepository.deleteById(name);
+    public void deleteDrawer(int id){
+        drawerRepository.deleteById(id);
     }
 
     //Returns all Items for a specific record
-    public List<Item> getItemsByDrawerName(String drawerName) {
-        Drawer drawer = drawerRepository.findById(drawerName).orElse(null);
-        if (drawer != null) {
-            return itemRepository.findByDrawer(drawer);
+    public List<Item> getItemsByDrawerId(int id) {
+        if (!(itemRepository.findItemsByDrawerId(id).isEmpty())) {
+            return itemRepository.findItemsByDrawerId(id);
         } else {
             return null;
         }

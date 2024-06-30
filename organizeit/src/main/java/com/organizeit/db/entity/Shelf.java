@@ -9,17 +9,32 @@ import java.util.List;
 @Table(name = "shelf")
 public class Shelf {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     @Column(name = "name")
     private String name;
 
     @Column(name = "room")
     private String room;
 
-    @OneToMany(mappedBy = "shelf", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Drawer> drawers;
+    //Constructor
+    public Shelf(String name, String room) {
+        this.name = name;
+        this.room = room;
+    }
+    public Shelf() {
+    }
 
     // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -34,13 +49,5 @@ public class Shelf {
 
     public void setRoom(String room) {
         this.room = room;
-    }
-
-    public List<Drawer> getDrawers() {
-        return drawers;
-    }
-
-    public void setDrawers(List<Drawer> drawers) {
-        this.drawers = drawers;
     }
 }

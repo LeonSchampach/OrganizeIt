@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>OrganizeIt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body{
             font-family: 'Courier New', Courier, monospace;
@@ -205,18 +206,20 @@
 </head>
 <body>
     <h1>Regale</h1>
-    <button id="addShelfButton" onclick="addShelf()">&#x2795; Regal hinzufügen</button>
+
+    <button id="addShelfButton" onclick="addShelf()"><i class="fa-solid fa-plus"></i> Regal hinzufügen</button>
     <div id="shelf_container">
         <div class="collapsible-container" th:each="shelf : ${shelves}">
             <button class="collapsible">
-                <span class="arrow">&#9654;</span><span th:text="${shelf.name}"></span>
+                <span class="arrow">&#9654;</span><span th:text="${shelf.name}" th:name="${shelf.id}"></span>
             </button>
             <div class="content" >
                 <!--   <p><a href="/test">Schreibtischlade</a></p>   -->
-                <div th:each="drawer : ${drawers}" th:if="${drawer.shelf} == ${shelf}">
+                <div th:each="drawer : ${drawers}" th:if="${drawer.shelfId} == ${shelf.id}">
                     <button class="drawer"
-                            th:attr="onclick=|window.location.href='/Drawers/' + '${drawer.name}';|"
-                            th:text="${drawer.name}">
+                            th:attr="onclick=|window.location.href='/Drawers/' + '${drawer.id}';|"
+                            th:text="${drawer.name}"
+                            th:name="${drawer.id}">
                     </button>
                 </div>
             </div>
@@ -236,7 +239,7 @@
                 </div>
             </div>
 
-            <button type="button" id="addDrawerButton">&#x2795; Lade hinzufügen</button>
+            <button type="button" id="addDrawerButton"><i class="fa-solid fa-plus"></i> Lade hinzufügen</button>
             <hr>
             <div class="saveButtonContainer"><button id="cancelBtn" onclick="cancel()">Abbrechen</button>   <button id="saveBtn" onclick="saveShelf()">Speichern</button></div>
         </div>
@@ -272,6 +275,7 @@
             drawers: drawerNames.map(name => ({name: name}))
         };
 
+        // API-Call to insert the shelf into the db
         await fetch('/api/createShelf', {
             method: 'POST',
             headers: {
@@ -287,11 +291,11 @@
             })
             .then(data => {
                 console.log('Success:', data);
-                alert('Shelf created successfully!');
+                //alert('Shelf created successfully!');
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error creating shelf');
+                //alert('Error creating shelf');
             });
 
         document.getElementById("newShelfName").value = null;

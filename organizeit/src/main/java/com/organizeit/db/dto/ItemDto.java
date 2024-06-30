@@ -1,34 +1,11 @@
-package com.organizeit.db.entity;
+package com.organizeit.db.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "item")
-public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ItemDto {
     private int id;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "desc")
     private String desc;
-
-    @Column(name = "drawerId", nullable = false)
     private int drawerId;
 
-    //Constructor
-    public Item(String name, String desc, int drawerId) {
-        this.name = name;
-        this.desc = desc;
-        this.drawerId = drawerId;
-    }
-    public Item() {
-    }
-
-    //Getters and Setters
     public int getId() {
         return id;
     }

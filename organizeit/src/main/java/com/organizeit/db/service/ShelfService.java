@@ -2,7 +2,10 @@ package com.organizeit.db.service;
 
 import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.entity.Shelf;
+import com.organizeit.db.repository.DrawerRepository;
+import com.organizeit.db.repository.ItemRepository;
 import com.organizeit.db.repository.ShelfRepository;
+import com.organizeit.errorhandling.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,14 +16,14 @@ import java.util.List;
 @Service
 public class ShelfService {
     @Autowired
-    ShelfRepository shelfRepository;
+    private ShelfRepository shelfRepository;
+    @Autowired
+    private DrawerRepository drawerRepository;
+    @Autowired
+    private ItemRepository itemRepository;
 
     @Transactional
     public Shelf createShelf(Shelf shelf) {
-        // Ensure bidirectional relationship
-        for (Drawer drawer : shelf.getDrawers()) {
-            drawer.setShelf(shelf);
-        }
         return shelfRepository.save(shelf);
     }
 
@@ -32,7 +35,7 @@ public class ShelfService {
     }
 
     //getting a specific record
-    public Shelf getShelfById(Integer id){
+    public Shelf getShelfById(int id){
         if(shelfRepository.findById(id).isEmpty()){
             return null;
         }
@@ -40,12 +43,33 @@ public class ShelfService {
     }
 
     //saving/updating a specific record
-    public void saveOrUpdate(Shelf shelf){
-        shelfRepository.save(shelf);
+    public Shelf saveOrUpdate(Shelf shelf){
+        return shelfRepository.save(shelf);
     }
 
     //deleting a specific record
-    public void deleteShelf(int id){
-        shelfRepository.deleteById(id);
+    public String deleteShelf(int id){
+        if(shelfRepository.findById(id).isPresent()){
+            List<Drawer> drawers = drawerRepository.findDrawersByShelfId(id);
+            for (Drawer drawer : drawers){
+                itemRepository.deleteAll(itemRepository.findItemsByDrawerId(drawer.getId()));
+            }
+            drawerRepository.deleteAll(drawerRepository.findDrawersByShelfId(id));
+            shelfRepository.deleteById(id);
+
+            return "Shelf and associated Drawer and Item entries deleted!";
+        }
+        else {
+            return ErrorMessages.INSTANCE.getInternalServerErrorString();
+        }
+    }
+
+    //Returns all Drawers for a specific record
+    public List<Drawer> getDrawersByShelfId(int id) {
+        if (!(drawerRepository.findDrawersByShelfId(id).isEmpty())) {
+            return drawerRepository.findDrawersByShelfId(id);
+        } else {
+            return null;
+        }
     }
 }

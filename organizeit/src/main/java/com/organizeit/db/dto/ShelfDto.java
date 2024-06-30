@@ -3,9 +3,18 @@ package com.organizeit.db.dto;
 import java.util.List;
 
 public class ShelfDto {
+    private int id;
     private String name;
     private String room;
     private List<DrawerDto> drawers;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

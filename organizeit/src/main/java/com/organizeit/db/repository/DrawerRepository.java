@@ -3,5 +3,8 @@ package com.organizeit.db.repository;
 import com.organizeit.db.entity.Drawer;
 import org.springframework.data.repository.CrudRepository;
 
-public interface DrawerRepository extends CrudRepository<Drawer, String> {
+import java.util.List;
+
+public interface DrawerRepository extends CrudRepository<Drawer, Integer> {
+    List<Drawer> findDrawersByShelfId(int id);
 }

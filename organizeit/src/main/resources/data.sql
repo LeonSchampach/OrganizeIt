@@ -1,15 +1,22 @@
--- Insert data into the shelf table
+-- Insert data into the shelf table and capture the generated IDs using session variables
 INSERT INTO shelf (name, room) VALUES ('Schreibtisch', 'Leons Zimmer');
-INSERT INTO shelf (name, room) VALUES ('Shelf2', 'RoomB');
-INSERT INTO shelf (name, room) VALUES ('Shelf3', 'RoomC');
+SET @schreibtischId = (SELECT id FROM shelf WHERE name = 'Schreibtisch');
 
--- Insert data into the drawer table
-INSERT INTO drawer (name, shelf_name) VALUES ('Schreibtischlade', 'Schreibtisch');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer2', 'Schreibtisch');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer3', 'Shelf2');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer4', 'Shelf2');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer5', 'Shelf3');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer6', 'Shelf3');
+INSERT INTO shelf (name, room) VALUES ('Shelf2', 'RoomB');
+SET @shelf2Id = (SELECT id FROM shelf WHERE name = 'Shelf2');
+
+INSERT INTO shelf (name, room) VALUES ('Shelf3', 'RoomC');
+SET @shelf3Id = (SELECT id FROM shelf WHERE name = 'Shelf3');
+
+-- Insert data into the drawer table using the captured shelf IDs
+INSERT INTO drawer (name, shelf_id) VALUES ('Schreibtischlade', @schreibtischId);
+SET @d1Id = (SELECT id FROM drawer WHERE name ='Schreibtischlade');
+INSERT INTO drawer (name, shelf_id) VALUES ('Drawer2', @schreibtischId);
+INSERT INTO drawer (name, shelf_id) VALUES ('Drawer3', @shelf2Id);
+INSERT INTO drawer (name, shelf_id) VALUES ('Drawer4', @shelf2Id);
+INSERT INTO drawer (name, shelf_id) VALUES ('Drawer5', @shelf3Id);
+INSERT INTO drawer (name, shelf_id) VALUES ('Drawer6', @shelf3Id);
+
 
 -- Insert data into the item table
-INSERT INTO item (name, desc, drawer_name) VALUES ('USB-Stick', '8GB, HTL-Wels Diplomarbeits USB-Stick', 'Schreibtischlade');
+INSERT INTO item (name, desc, drawer_id) VALUES ('USB-Stick', '8GB, HTL-Wels Diplomarbeits USB-Stick', @d1Id);

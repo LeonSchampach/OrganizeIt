@@ -1,9 +1,12 @@
 package com.organizeit.controller;
 
+import com.organizeit.db.dto.DrawerDto;
+import com.organizeit.db.dto.ItemDto;
 import com.organizeit.db.dto.ShelfDto;
 import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.entity.Item;
 import com.organizeit.db.entity.Shelf;
+import com.organizeit.db.repository.DrawerRepository;
 import com.organizeit.db.service.DrawerService;
 import com.organizeit.db.service.ItemService;
 import com.organizeit.db.service.ShelfService;
@@ -14,8 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,8 @@ public class APIController {
 
     @Autowired
     private ShelfService shelfService;
+    @Autowired
+    private DrawerRepository drawerRepository;
 
     /**
      * Retrieves a book from the database based on its ISBN.
@@ -128,19 +131,44 @@ public class APIController {
     /**
      * Creates a new item in the database.
      *
-     * @param name        The name of the item.
-     * @param desc        A description for the item.
-     * @param drawerName  The name of the Drawer that holds the item.
+     * @param itemDto        Dto with all the data of the item.
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
     @PostMapping("/createItem")
-    public ResponseEntity<?> createItem(@RequestParam String name, @RequestParam String desc, @RequestParam String drawerName) {
+    public ResponseEntity<?> createItem(@RequestBody ItemDto itemDto) {
         try {
-            String decodeName = URLDecoder.decode(name, StandardCharsets.UTF_8);
-            String decodeDesc = URLDecoder.decode(desc, StandardCharsets.UTF_8);
-            String decodeDrawerName = URLDecoder.decode(drawerName, StandardCharsets.UTF_8);
-            if(!decodeName.isEmpty()){
-                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(itemService.saveOrUpdate(new Item(decodeName, decodeDesc, drawerService.getDrawerByName(decodeDrawerName))));
+            Item item = new Item();
+            item.setName(itemDto.getName());
+            item.setDesc(itemDto.getName());
+            item.setDrawerId(itemDto.getDrawerId());
+
+            Item createdItem = itemService.createItem(item);
+            if(createdItem != null){
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdItem);
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
+     * Creates a new drawer in the database.
+     *
+     * @param drawerDto        Dto with all the data of the drawer.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @PostMapping("/createDrawer")
+    public ResponseEntity<?> createDrawer(@RequestBody DrawerDto drawerDto) {
+        try {
+            Drawer drawer = new Drawer();
+            drawer.setName(drawerDto.getName());
+            drawer.setShelfId(drawerDto.getShelfId());
+
+            Drawer createdDrawer = drawerService.createDrawer(drawer);
+            if(createdDrawer != null){
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdDrawer);
             }else{
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
             }
@@ -158,9 +186,7 @@ public class APIController {
     @PostMapping("/createShelf")
     public ResponseEntity<?> createShelf(@RequestBody ShelfDto shelfDto) {
         try{
-            Shelf shelf = new Shelf();
-            shelf.setName(shelfDto.getName());
-            shelf.setRoom(shelfDto.getRoom());
+            Shelf shelf = convertShelfDtoToShelf(shelfDto);
 
             List<Drawer> drawers = shelfDto.getDrawers().stream()
                     .map(drawerDto -> {
@@ -170,9 +196,11 @@ public class APIController {
                     })
                     .collect(Collectors.toList());
 
-            shelf.setDrawers(drawers);
-
             Shelf createdShelf = shelfService.createShelf(shelf);
+            for (Drawer drawer : drawers){
+                drawer.setShelfId(createdShelf.getId());
+                drawerService.createDrawer(drawer);
+            }
             if(createdShelf != null){
                 return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdShelf);
             }else{
@@ -181,5 +209,54 @@ public class APIController {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
         }
+    }
+
+    /**
+     * Updates a shelf from the database.
+     *
+     * @param shelfDto        Dto with all the data of the shelf.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @PostMapping("/updateShelf")
+    public ResponseEntity<?> updateShelf(@RequestBody ShelfDto shelfDto) {
+        try{
+            Shelf shelf = convertShelfDtoToShelf(shelfDto);
+            shelf.setId(shelfDto.getId());
+            Shelf createdShelf = shelfService.saveOrUpdate(shelf);
+            if(createdShelf != null){
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdShelf);
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
+            }
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
+     * Deletes a shelf from the database.
+     *
+     * @param id        Id of the shelf that has to be deleted.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @PostMapping("/deleteShelf")
+    public ResponseEntity<?> deleteShelf(@RequestBody int id) {
+        try {
+            String response;
+            if (!(response = shelfService.deleteShelf(id)).equals(ErrorMessages.INSTANCE.getInternalServerErrorString())) {
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(response);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    public Shelf convertShelfDtoToShelf(ShelfDto shelfDto){
+        Shelf shelf = new Shelf();
+        shelf.setName(shelfDto.getName());
+        shelf.setRoom(shelfDto.getRoom());
+        return shelf;
     }
 }

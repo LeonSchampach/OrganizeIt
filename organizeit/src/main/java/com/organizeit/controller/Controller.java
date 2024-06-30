@@ -34,10 +34,12 @@ public class Controller {
         return "index";
     }
 
-    @GetMapping("/Drawers/{drawer}")
-    public String readEndpoints(@PathVariable String drawer, Model model){
-        List<Item> items = drawerService.getItemsByDrawerName(drawer);
+    @GetMapping("/Drawers/{drawerId}")
+    public String readEndpoints(@PathVariable int drawerId, Model model){
+        List<Item> items = drawerService.getItemsByDrawerId(drawerId);
+        Drawer drawer = drawerService.getDrawerById(drawerId);
         model.addAttribute("items", items);
+        model.addAttribute("drawer", drawer);
         return "drawer";
     }
 
