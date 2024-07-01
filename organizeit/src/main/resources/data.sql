@@ -19,4 +19,4 @@ INSERT INTO drawer (name, shelf_id) VALUES ('Drawer6', @shelf3Id);
 
 
 -- Insert data into the item table
-INSERT INTO item (name, desc, drawer_id) VALUES ('USB-Stick', '8GB, HTL-Wels Diplomarbeits USB-Stick', @d1Id);
+INSERT INTO item (name, desc, quantity, drawer_id) VALUES ('USB-Stick', '8GB, HTL-Wels Diplomarbeits USB-Stick', 1, @d1Id);

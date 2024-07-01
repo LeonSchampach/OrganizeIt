@@ -4,6 +4,7 @@ public class ItemDto {
     private int id;
     private String name;
     private String desc;
+    private int quantity;
     private int drawerId;
 
     public int getId() {
@@ -28,6 +29,14 @@ public class ItemDto {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getDrawerId() {

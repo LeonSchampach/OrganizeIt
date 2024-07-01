@@ -20,6 +20,7 @@ CREATE TABLE /*IF NOT EXISTS*/ item (
                         id LONG NOT NULL AUTO_INCREMENT,
                         name VARCHAR(255) NOT NULL,
                         desc VARCHAR(255),
+                        quantity int NOT NULL,
                         drawer_id LONG,
                         PRIMARY KEY (name),
                         CONSTRAINT fk_drawer FOREIGN KEY (drawer_id) REFERENCES drawer(id)

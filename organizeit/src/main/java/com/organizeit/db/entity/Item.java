@@ -16,6 +16,9 @@ public class Item {
     @Column(name = "desc")
     private String desc;
 
+    @Column(name = "quantity")
+    private int quantity;
+
     @Column(name = "drawerId", nullable = false)
     private int drawerId;
 
@@ -51,6 +54,14 @@ public class Item {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getDrawerId() {

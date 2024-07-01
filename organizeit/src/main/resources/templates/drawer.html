@@ -11,11 +11,46 @@
         h1{
             text-align: center;
         }
+
+        /* Contains the List of all Items */
         #item-container{
-            max-width: fit-content;
+            width: fit-content;
+            max-width: 250px;
             margin-left: auto;
             margin-right: auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
+        .collapsible {
+            background-color: #f1f1f1;
+            color: #444;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 12pt;
+            display: flex;
+            align-items: center;
+        }
+        .collapsible .arrow {
+            transition: transform 0.2s;
+            margin-right: 10px;
+        }
+        .active .arrow {
+            transform: rotate(90deg);
+        }
+        .active, .collapsible:hover {
+            background-color: #ccc;
+        }
+        .content {
+            padding: 0 0px;
+            display: none;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+
+        /* ... */
         #input-container{
             display: grid;
             grid-template-columns: 1fr;
@@ -56,7 +91,7 @@
         #addItemButton{
             margin-left: 50%;
             transform: translate(-50%);
-            margin-bottom: 10px;
+            margin-bottom: 25px;
             padding: 10px 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
@@ -145,17 +180,39 @@
         ul p{
             margin: 0;
         }
+
+        #editBtn{
+            width: 50%;
+            min-width: fit-content;
+        }
+        #deleteBtn{
+            width: 50%;
+            min-width: fit-content;
+        }
     </style>
 </head>
 <body>
     <h1 th:text="${drawer.name}"></h1>
     <button id="addItemButton" onclick="addItem()"><i class="fa-solid fa-plus"></i> Gegenstand hinzufügen</button>
-    <div id="item-container">
+    <!--<div id="item-container">
         <ul>
             <li th:each="item : ${items}">
                 <p th:text="${item.name}"></p>
             </li>
         </ul>
+    </div>-->
+
+    <div id="item-container">
+        <div class="collapsible-container" th:each="item : ${items}">
+            <button class="collapsible">
+                <span class="arrow">&#9654;</span><span th:text="${item.name}" th:name="${item.id}"></span>
+            </button>
+            <div class="content" >
+                <span th:text="'Menge: ' + ${item.quantity}"></span><br>
+                <span th:text="'Beschreibung: ' + ${item.desc}"></span><br>
+                <button id="editBtn">Bearbeiten</button><button id="deleteBtn">Löschen</button>
+            </div>
+        </div>
     </div>
 
     <div id="prompt" class="modal">
@@ -188,10 +245,16 @@
         promptModal.style.display = "none";
         let name = document.getElementById("newItemName").value;
         let desc = document.getElementById("newItemDesc").value;
+        let quantity = document.getElementById("newItemQuantity").value;
+
+        if (quantity === 0){
+            quantity = 1;
+        }
 
         const itemData = {
             name: name,
             room: desc,
+            quantity: quantity,
             drawerId: drawerId
         };
 
@@ -239,6 +302,22 @@
             promptModal.style.display = "none";
         }
     }
+
+    // This code is responsible for making the Shelf-Buttons collapsible
+    document.addEventListener("DOMContentLoaded", function() {
+        let coll = document.getElementsByClassName("collapsible");
+        for (let i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                let content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    });
 </script>
 </body>
 </html>
