@@ -1327,3 +1327,6 @@ INSERT INTO drawer (name, shelf_name) VALUES ('Schreibtischlade', 'Schreibtisch'
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
 	at com.organizeit.OrganizeitApplication.main(OrganizeitApplication.java:10)
+2024-07-02 15:38:03.928481+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DESC CHARACTER VARYING(255)": "'asdffffaaaaaaaaaaaaaaaaaaaaa111111111111111111111111112222222222222222222222222... (308)"; SQL statement:
+insert into item (desc,drawer_id,name,quantity,id) values (?,?,?,?,default) [22001-224]

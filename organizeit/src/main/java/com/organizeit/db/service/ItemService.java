@@ -4,6 +4,7 @@ import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.entity.Item;
 import com.organizeit.db.entity.Shelf;
 import com.organizeit.db.repository.ItemRepository;
+import com.organizeit.errorhandling.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,14 @@ public class ItemService {
     }
 
     //deleting a specific record
-    public void deleteItem(int id){
-        itemRepository.deleteById(id);
+    public String deleteItem(int id){
+        if(itemRepository.findById(id).isPresent()){
+            itemRepository.deleteById(id);
+
+            return "Item entries deleted!";
+        }
+        else {
+            return ErrorMessages.INSTANCE.getInternalServerErrorString();
+        }
     }
 }

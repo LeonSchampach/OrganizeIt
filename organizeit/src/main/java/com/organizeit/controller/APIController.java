@@ -139,7 +139,8 @@ public class APIController {
         try {
             Item item = new Item();
             item.setName(itemDto.getName());
-            item.setDesc(itemDto.getName());
+            item.setDesc(itemDto.getDesc());
+            item.setQuantity(itemDto.getQuantity());
             item.setDrawerId(itemDto.getDrawerId());
 
             Item createdItem = itemService.createItem(item);
@@ -147,6 +148,48 @@ public class APIController {
                 return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdItem);
             }else{
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
+     * Updates a item from the database.
+     *
+     * @param itemDto        Dto with all the data of the item.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @PostMapping("/updateItem")
+    public ResponseEntity<?> updateItem(@RequestBody ItemDto itemDto) {
+        try{
+            Item item = convertItemDtoToItem(itemDto);
+            item.setId(itemDto.getId());
+            Item createdItem = itemService.saveOrUpdate(item);
+            if(createdItem != null){
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdItem);
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
+            }
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
+     * Deletes a item from the database.
+     *
+     * @param id        Id of the item that has to be deleted.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @PostMapping("/deleteItem")
+    public ResponseEntity<?> deleteItem(@RequestParam int id) {
+        try {
+            String response;
+            if (!(response = itemService.deleteItem(id)).equals(ErrorMessages.INSTANCE.getInternalServerErrorString())) {
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(response);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
@@ -240,7 +283,7 @@ public class APIController {
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
     @PostMapping("/deleteShelf")
-    public ResponseEntity<?> deleteShelf(@RequestBody int id) {
+    public ResponseEntity<?> deleteShelf(@RequestParam int id) {
         try {
             String response;
             if (!(response = shelfService.deleteShelf(id)).equals(ErrorMessages.INSTANCE.getInternalServerErrorString())) {
@@ -258,5 +301,14 @@ public class APIController {
         shelf.setName(shelfDto.getName());
         shelf.setRoom(shelfDto.getRoom());
         return shelf;
+    }
+
+    public Item convertItemDtoToItem(ItemDto itemDto){
+        Item item = new Item();
+        item.setName(itemDto.getName());
+        item.setDesc(itemDto.getDesc());
+        item.setQuantity(itemDto.getQuantity());
+        item.setDrawerId(itemDto.getDrawerId());
+        return item;
     }
 }

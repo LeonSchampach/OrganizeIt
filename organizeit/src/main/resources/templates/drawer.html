@@ -12,44 +12,6 @@
             text-align: center;
         }
 
-        /* Contains the List of all Items */
-        #item-container{
-            width: fit-content;
-            max-width: 250px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-        }
-        .collapsible {
-            background-color: #f1f1f1;
-            color: #444;
-            cursor: pointer;
-            padding: 10px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            outline: none;
-            font-size: 12pt;
-            display: flex;
-            align-items: center;
-        }
-        .collapsible .arrow {
-            transition: transform 0.2s;
-            margin-right: 10px;
-        }
-        .active .arrow {
-            transform: rotate(90deg);
-        }
-        .active, .collapsible:hover {
-            background-color: #ccc;
-        }
-        .content {
-            padding: 0 0px;
-            display: none;
-            overflow: hidden;
-            background-color: #f9f9f9;
-        }
-
         /* ... */
         #input-container{
             display: grid;
@@ -181,13 +143,72 @@
             margin: 0;
         }
 
+        /* Contains the List of all Items */
+        #item-container{
+            width: fit-content;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+        .collapsible {
+            background-color: #f1f1f1;
+            color: #444;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 12pt;
+            display: flex;
+            align-items: center;
+        }
+        .collapsible .arrow {
+            transition: transform 0.2s;
+            margin-right: 10px;
+        }
+        .active .arrow {
+            transform: rotate(90deg);
+        }
+        .active, .collapsible:hover {
+            background-color: #ccc;
+        }
+        .content {
+            padding: 10px 5px 5px;
+            display: none;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+        /* Buttons for editing or deleting an item */
+        #outerDiv{
+            border-top: 1px solid black;
+
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        #listBtn-container{
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
         #editBtn{
-            width: 50%;
-            min-width: fit-content;
+            width: fit-content;
+            font-weight: bold;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 2px;
         }
         #deleteBtn{
-            width: 50%;
-            min-width: fit-content;
+            width: fit-content;
+            margin-left: 5px;
+            font-weight: bold;
+            background-color: white;
+            border: 1px solid red;
+            border-radius: 2px;
+        }
+        #editBtn:hover, #deleteBtn:hover{
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -210,7 +231,7 @@
             <div class="content" >
                 <span th:text="'Menge: ' + ${item.quantity}"></span><br>
                 <span th:text="'Beschreibung: ' + ${item.desc}"></span><br>
-                <button id="editBtn">Bearbeiten</button><button id="deleteBtn">Löschen</button>
+                <div id="outerDiv"><div id="listBtn-container"><button id="editBtn"><i class="fa-solid fa-pen-to-square"></i> Bearbeiten</button><button id="deleteBtn" th:onclick="'deleteItem('+${item.id}+')'"><i class="fa-solid fa-trash"></i> Löschen</button></div></div>
             </div>
         </div>
     </div>
@@ -253,7 +274,7 @@
 
         const itemData = {
             name: name,
-            room: desc,
+            desc: desc,
             quantity: quantity,
             drawerId: drawerId
         };
@@ -283,6 +304,12 @@
 
         document.getElementById("newItemName").value = null;
         document.getElementById("newItemDesc").value = null;
+
+        location.reload();
+    }
+
+    async function deleteItem(id){
+        await fetch("http://" + backendIP + "/api/deleteItem?id=" + id, {method: "POST"});
 
         location.reload();
     }
