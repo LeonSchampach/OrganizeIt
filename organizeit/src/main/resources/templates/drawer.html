@@ -12,16 +12,6 @@
             text-align: center;
         }
 
-        /* ... */
-        #input-container{
-            display: grid;
-            grid-template-columns: 1fr;
-            width: 100%;
-            max-width: 400px;
-            gap: 10px;
-            padding: 10px;
-        }
-
         /* Button to add a new Item */
         button {
             font-family: 'Courier New', Courier, monospace;
@@ -57,20 +47,21 @@
             padding: 10px 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
-        #saveBtn{
+        .saveBtn{
             background-color: #2962ff;
             color: white;
         }
-        #saveBtn:hover{
-            /*background-color: #2454d8;*/
+        .saveBtn:hover{
+            background-color: #2454d8;
             transform: translateY(-3px);
         }
-        #cancelBtn{
+        .cancelBtn{
             background-color: white;
             border: 1px solid black;
             border-radius: 2px;
         }
-        #cancelBtn:hover{
+        .cancelBtn:hover{
+            background-color: white;
             transform: translateY(-3px);
         }
         .saveButtonContainer{
@@ -109,6 +100,14 @@
             margin-left: 10px;
             margin-right: 10px;
             border-bottom: 1px solid black;
+        }
+        .input-container{
+            display: grid;
+            grid-template-columns: 1fr;
+            width: 100%;
+            max-width: 400px;
+            gap: 10px;
+            padding: 10px;
         }
 
         /* Input Fields for name and room of the shelf in the Modal */
@@ -226,43 +225,67 @@
     <div id="item-container">
         <div class="collapsible-container" th:each="item : ${items}">
             <button class="collapsible">
-                <span class="arrow">&#9654;</span><span th:text="${item.name}" th:name="${item.id}"></span>
+                <span class="arrow">&#9654;</span><span th:text="${item.name}" th:id="${item.id}"></span>
             </button>
             <div class="content" >
-                <span th:text="'Menge: ' + ${item.quantity}"></span><br>
-                <span th:text="'Beschreibung: ' + ${item.desc}"></span><br>
-                <div id="outerDiv"><div id="listBtn-container"><button id="editBtn"><i class="fa-solid fa-pen-to-square"></i> Bearbeiten</button><button id="deleteBtn" th:onclick="'deleteItem('+${item.id}+')'"><i class="fa-solid fa-trash"></i> Löschen</button></div></div>
+                <span th:id="${item.id}+'_quantity'" th:text="'Menge: ' + ${item.quantity}"></span><br>
+                <span th:id="${item.id}+'_desc'" th:text="'Beschreibung: ' + ${item.desc}"></span><br>
+                <div id="outerDiv"><div id="listBtn-container"><button id="editBtn" th:onclick="'editItem('+${item.id}+')'"><i class="fa-solid fa-pen-to-square"></i> Bearbeiten</button><button id="deleteBtn" th:onclick="'deleteItem('+${item.id}+')'"><i class="fa-solid fa-trash"></i> Löschen</button></div></div>
             </div>
         </div>
     </div>
 
     <div id="prompt" class="modal">
-
         <!-- Modal content -->
         <div class="modal-content">
             <!--<label>Name:<input type="text" id="newItemName"/></label>
             <label>Beschreibung:<input type="text" id="newItemDesc"/></label>-->
-            <div id="input-container">
+            <div class="input-container">
                 <div class="input-box"><label>Name:<input type="text" id="newItemName" placeholder="Name"/></label></div>
                 <div class="input-box"><label>Beschreibung:<input type="text" id="newItemDesc" placeholder="Beschreibung"/></label></div>
                 <div class="input-box"><label>Menge:<input type="number" id="newItemQuantity" placeholder="Menge"/></label></div>
             </div>
 
-            <div class="saveButtonContainer"><button id="cancelBtn" onclick="cancel()">Abbrechen</button>   <button id="saveBtn" onclick="saveItem()">Speichern</button></div>
+            <div class="saveButtonContainer"><button class="cancelBtn" onclick="cancel()">Abbrechen</button>   <button class="saveBtn" onclick="createItem()">Speichern</button></div>
         </div>
+    </div>
 
+    <div id="editPrompt" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <!--<label>Name:<input type="text" id="newItemName"/></label>
+            <label>Beschreibung:<input type="text" id="newItemDesc"/></label>-->
+            <div class="input-container">
+                <input type="hidden" id="itemId"/>
+                <div class="input-box"><label>Name:<input type="text" id="itemName" placeholder="Name"/></label></div>
+                <div class="input-box"><label>Beschreibung:<input type="text" id="itemDesc" placeholder="Beschreibung"/></label></div>
+                <div class="input-box"><label>Menge:<input type="number" id="itemQuantity" placeholder="Menge"/></label></div>
+            </div>
+
+            <div class="saveButtonContainer"><button class="cancelBtn" onclick="cancel()">Abbrechen</button>   <button class="saveBtn" onclick="updateItem()">Speichern</button></div>
+        </div>
     </div>
 
 <script th:inline="javascript">
     const backendIP = "localhost:8080";
     const drawerId = /*[[${drawerId}]]*/ '';
     const promptModal = document.getElementById("prompt");
+    const editPromptModal = document.getElementById("editPrompt");
 
     function addItem(){
         promptModal.style.display = "block";
     }
 
-    async function saveItem(){
+    function editItem(id){
+        editPromptModal.style.display = "block";
+
+        document.getElementById("itemId").value = id;
+        document.getElementById("itemName").value = document.getElementById(id).innerText;
+        document.getElementById("itemDesc").value = (document.getElementById(id+"_desc").innerText).substring(14);
+        document.getElementById("itemQuantity").value = (document.getElementById(id+"_quantity").innerText).substring(7);
+    }
+
+    async function createItem(){
         promptModal.style.display = "none";
         let name = document.getElementById("newItemName").value;
         let desc = document.getElementById("newItemDesc").value;
@@ -308,6 +331,54 @@
         location.reload();
     }
 
+    async function updateItem(){
+        editPromptModal.style.display = "none";
+        let id = document.getElementById("itemId").value;
+        let name = document.getElementById("itemName").value;
+        let desc = document.getElementById("itemDesc").value;
+        let quantity = document.getElementById("itemQuantity").value;
+
+        if (quantity === 0){
+            quantity = 1;
+        }
+
+        const itemData = {
+            id: id,
+            name: name,
+            desc: desc,
+            quantity: quantity,
+            drawerId: drawerId
+        };
+
+        // API-Call to insert the item into the db
+        await fetch('/api/updateItem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(itemData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                //alert('Item created successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                //alert('Error creating item');
+            });
+
+        document.getElementById("itemName").value = null;
+        document.getElementById("itemDesc").value = null;
+
+        location.reload();
+    }
+
     async function deleteItem(id){
         await fetch("http://" + backendIP + "/api/deleteItem?id=" + id, {method: "POST"});
 
@@ -317,16 +388,28 @@
     function cancel(){
         document.getElementById("newItemName").value = null;
         document.getElementById("newItemDesc").value = null;
+        document.getElementById("newItemQuantity").value = null;
+
+        document.getElementById("itemName").value = null;
+        document.getElementById("itemDesc").value = null;
+        document.getElementById("itemQuantity").value = null;
 
         promptModal.style.display = "none";
+        editPromptModal.style.display = "none";
     }
 
     window.onclick = function(event) {
-        if (event.target === promptModal) {
+        if (event.target === promptModal || event.target === editPromptModal) {
             document.getElementById("newItemName").value = null;
             document.getElementById("newItemDesc").value = null;
+            document.getElementById("newItemQuantity").value = null;
+
+            document.getElementById("itemName").value = null;
+            document.getElementById("itemDesc").value = null;
+            document.getElementById("itemQuantity").value = null;
 
             promptModal.style.display = "none";
+            editPromptModal.style.display = "none";
         }
     }
 
