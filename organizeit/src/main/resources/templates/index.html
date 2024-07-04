@@ -17,6 +17,12 @@
             margin-right: auto;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
+
+        /* Collapsible Buttons */
+        .collapsible-container {
+            display: flex;
+            align-items: center;
+        }
         .collapsible {
             background-color: #f1f1f1;
             color: #444;
@@ -40,14 +46,29 @@
         .active, .collapsible:hover {
             background-color: #ccc;
         }
-
         .content {
             padding: 0 0px;
             display: none;
             overflow: hidden;
             background-color: #f9f9f9;
         }
+        .edit-button {
+            display: none;
+            background-color: #ccc;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin-left: 10px;
+            font-size: 15px;
+        }
+        .edit-button:hover{
+            background-color: #bfbfbf;
+        }
+        .collapsible-container.active .edit-button {
+            display: inline-block;
+        }
 
+        /* Drawers */
         .drawer{
             background-color: #f1f1f1;
             color: #444;
@@ -72,7 +93,6 @@
             border: none;
             background-color: #f1f1f1;
             cursor: pointer;
-            padding: 5px 10px;
             /*width: fit-content;
             padding: 5px 25px;
             margin-top: 25px;
@@ -90,9 +110,6 @@
             text-align: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
         }
-        button:hover {
-            background-color: #dadada;
-        }
         #addShelfButton{
             margin-left: 50%;
             transform: translate(-50%);
@@ -100,8 +117,14 @@
             padding: 10px 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
+        #addShelfButton:hover {
+            background-color: #dadada;
+        }
         #addDrawerButton{
             padding: 5px 10px;
+        }
+        #addDrawerButton:hover {
+            background-color: #dadada;
         }
         #saveBtn{
             background-color: #2962ff;
@@ -209,17 +232,23 @@
 
     <button id="addShelfButton" onclick="addShelf()"><i class="fa-solid fa-plus"></i> Regal hinzufügen</button>
     <div id="shelf_container">
-        <div class="collapsible-container" th:each="shelf : ${shelves}">
-            <button class="collapsible">
-                <span class="arrow">&#9654;</span><span th:text="${shelf.name}" th:name="${shelf.id}"></span>
-            </button>
+        <div th:each="shelf : ${shelves}">
+            <div class="collapsible-container">
+                <button class="collapsible">
+                    <span class="arrow">&#9654;</span><span th:id="${shelf.id}" th:text="${shelf.name}" th:name="${shelf.room}"></span>
+                </button>
+                <button class="edit-button" th:onclick="'editShelf('+${shelf.id}+')'">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+            </div>
             <div class="content" >
                 <!--   <p><a href="/test">Schreibtischlade</a></p>   -->
                 <div th:each="drawer : ${drawers}" th:if="${drawer.shelfId} == ${shelf.id}">
                     <button class="drawer"
                             th:attr="onclick=|window.location.href='/Drawers/' + '${drawer.id}';|"
                             th:text="${drawer.name}"
-                            th:name="${drawer.id}">
+                            th:name="${drawer.id}"
+                            th:id="${shelf.id}">
                     </button>
                 </div>
             </div>
@@ -245,8 +274,26 @@
         </div>
     </div>
 
+    <div id="editPrompt" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="input-container">
+                <input type="hidden" id="shelfId"/>
+                <div class="input-box"><label>Name:<input type="text" id="shelfName" placeholder="Name"/></label></div>
+                <div class="input-box"><label>Raum:<input type="text" id="shelfRoom" placeholder="Raum"/></label></div>
+
+                <div id="editDrawerInputs">
+                    <div id="editDrawer-label"><label>Laden:</label></div>
+                </div>
+            </div>
+
+            <div class="saveButtonContainer"><button class="cancelBtn" onclick="cancel()">Abbrechen</button>   <button class="saveBtn" onclick="updateItem()">Speichern</button></div>
+        </div>
+    </div>
+
 <script th:inline="javascript">
     const promptModal = document.getElementById("prompt");
+    const editPromptModal = document.getElementById("editPrompt");
 
     function addShelf(){
         promptModal.style.display = "block";
@@ -259,6 +306,27 @@
         newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
         drawerInputs.appendChild(newDrawerInput);
     });
+
+    function editShelf(id){
+        editPromptModal.style.display = "block";
+
+        document.getElementById("shelfId").value = id;
+        document.getElementById("shelfName").value = document.getElementById(id).innerText;
+        document.getElementById("shelfRoom").value = document.getElementById(id).getAttribute("name");
+
+        let drawers = document.getElementsByClassName("drawer");
+
+        Array.from(drawers).forEach(function(drawer) {
+            console.log(drawer.id +"--"+id);
+            if(String(id) === drawer.id){
+                const editDrawerInputs = document.getElementById('editDrawerInputs');
+                const newDrawerInput = document.createElement('div');
+                newDrawerInput.classList.add('drawer-input');
+                newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" value='+drawer.innerText+' id='+drawer.name+'>';
+                editDrawerInputs.appendChild(newDrawerInput);
+            }
+        });
+    }
 
     async function saveShelf() {
         promptModal.style.display = "none";
@@ -343,11 +411,12 @@
 
     // This code is responsible for making the Shelf-Buttons collapsible
     document.addEventListener("DOMContentLoaded", function() {
-        var coll = document.getElementsByClassName("collapsible");
-        for (var i = 0; i < coll.length; i++) {
+        let coll = document.getElementsByClassName("collapsible");
+        for (let i = 0; i < coll.length; i++) {
             coll[i].addEventListener("click", function() {
                 this.classList.toggle("active");
-                var content = this.nextElementSibling;
+                this.parentElement.classList.toggle("active");
+                let content = this.parentElement.nextElementSibling;
                 if (content.style.display === "block") {
                     content.style.display = "none";
                 } else {
@@ -356,6 +425,8 @@
             });
         }
     });
+
+
 </script>
 </body>
 </html>

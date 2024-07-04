@@ -237,7 +237,7 @@ public class APIController {
                         drawer.setName(drawerDto.getName());
                         return drawer;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
 
             Shelf createdShelf = shelfService.createShelf(shelf);
             for (Drawer drawer : drawers){

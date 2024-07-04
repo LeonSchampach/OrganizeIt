@@ -11,41 +11,23 @@
         h1{
             text-align: center;
         }
-
-        /* Button to add a new Item */
         button {
             font-family: 'Courier New', Courier, monospace;
             font-size: 12pt;
+            cursor: pointer;
             border: none;
-            background-color: #f1f1f1;
-            cursor: pointer;
-            padding: 5px 10px;
-            /*width: fit-content;
-            padding: 5px 25px;
-            margin-top: 25px;
-            margin-left: 50%;
-            transform: translate(-50%);
-            display: inline-block;
-            outline: none;
-            cursor: pointer;
-            background-color: blue;
-            border-radius: 0.25rem;
-            border: 1px solid blue;
-            color: #fff;
-            font-size: 24px;
-            line-height: 30px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
         }
-        button:hover {
-            background-color: #dadada;
-        }
+
         #addItemButton{
+            background-color: #f1f1f1;
             margin-left: 50%;
             transform: translate(-50%);
             margin-bottom: 25px;
             padding: 10px 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+        #addItemButton:hover {
+            background-color: #dadada;
         }
         .saveBtn{
             background-color: #2962ff;
@@ -179,6 +161,7 @@
             overflow: hidden;
             background-color: #f9f9f9;
         }
+
         /* Buttons for editing or deleting an item */
         #outerDiv{
             border-top: 1px solid black;
@@ -209,9 +192,21 @@
         #editBtn:hover, #deleteBtn:hover{
             transform: translateY(-3px);
         }
+
+        #backBtn{
+            margin-top: 25px;
+            margin-left: 20px;
+        }
+        #backSymbol{
+            scale: 4;
+            background-color: white;
+        }
     </style>
 </head>
 <body>
+
+    <button id="backBtn"><i id="backSymbol" class="fa-regular fa-circle-left"></i></button>
+
     <h1 th:text="${drawer.name}"></h1>
     <button id="addItemButton" onclick="addItem()"><i class="fa-solid fa-plus"></i> Gegenstand hinzufügen</button>
     <!--<div id="item-container">
@@ -271,6 +266,10 @@
     const drawerId = /*[[${drawerId}]]*/ '';
     const promptModal = document.getElementById("prompt");
     const editPromptModal = document.getElementById("editPrompt");
+
+    document.getElementById("backBtn").onclick = function() {
+        window.history.back();
+    };
 
     function addItem(){
         promptModal.style.display = "block";
