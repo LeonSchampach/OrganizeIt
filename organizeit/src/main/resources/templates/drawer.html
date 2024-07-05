@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>OrganizeIt</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body{
@@ -185,9 +186,13 @@
             width: fit-content;
             margin-left: 5px;
             font-weight: bold;
-            background-color: white;
-            border: 1px solid red;
-            border-radius: 2px;
+            background-color: red;
+            color: white;
+            padding: 2px 5px;
+        }
+        #bin{
+            color: #ffffff;
+            transform: translateY(1px);
         }
         #editBtn:hover, #deleteBtn:hover{
             transform: translateY(-3px);
@@ -225,7 +230,7 @@
             <div class="content" >
                 <span th:id="${item.id}+'_quantity'" th:text="'Menge: ' + ${item.quantity}"></span><br>
                 <span th:id="${item.id}+'_desc'" th:text="'Beschreibung: ' + ${item.desc}"></span><br>
-                <div id="outerDiv"><div id="listBtn-container"><button id="editBtn" th:onclick="'editItem('+${item.id}+')'"><i class="fa-solid fa-pen-to-square"></i> Bearbeiten</button><button id="deleteBtn" th:onclick="'deleteItem('+${item.id}+')'"><i class="fa-solid fa-trash"></i> Löschen</button></div></div>
+                <div id="outerDiv"><div id="listBtn-container"><button id="editBtn" th:onclick="'editItem('+${item.id}+')'"><i class="fa-solid fa-pen-to-square"></i> Bearbeiten</button><button id="deleteBtn" th:onclick="'deleteItem('+${item.id}+')'"><i class="fa-solid fa-trash" id="bin"></i> Löschen</button></div></div>
             </div>
         </div>
     </div>
@@ -349,7 +354,7 @@
             drawerId: drawerId
         };
 
-        // API-Call to insert the item into the db
+        // API-Call to update the item in the db
         await fetch('/api/updateItem', {
             method: 'POST',
             headers: {

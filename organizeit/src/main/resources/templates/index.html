@@ -126,20 +126,21 @@
         #addDrawerButton:hover {
             background-color: #dadada;
         }
-        #saveBtn{
+        .saveBtn{
             background-color: #2962ff;
             color: white;
+            padding: 2px 5px;
         }
-        #saveBtn:hover{
+        .saveBtn:hover{
             background-color: #2454d8;
             transform: translateY(-3px);
         }
-        #cancelBtn{
+        .cancelBtn{
             background-color: white;
             border: 1px solid black;
             border-radius: 2px;
         }
-        #cancelBtn:hover{
+        .cancelBtn:hover{
             transform: translateY(-3px);
         }
         .saveButtonContainer{
@@ -225,6 +226,18 @@
             color: dodgerblue;
         }
 
+        #delBtn{
+            background-color: red;
+            color: white;
+            padding: 2px 5px;
+        }
+        #delBtn:hover{
+            transform: translateY(-3px);
+        }
+        #bin{
+            color: #ffffff;
+            transform: translateY(1px);
+        }
     </style>
 </head>
 <body>
@@ -270,7 +283,7 @@
 
             <button type="button" id="addDrawerButton"><i class="fa-solid fa-plus"></i> Lade hinzufügen</button>
             <hr>
-            <div class="saveButtonContainer"><button id="cancelBtn" onclick="cancel()">Abbrechen</button>   <button id="saveBtn" onclick="saveShelf()">Speichern</button></div>
+            <div class="saveButtonContainer"><button class="cancelBtn" onclick="cancel()">Abbrechen</button>   <button class="saveBtn" onclick="saveShelf()">Speichern</button></div>
         </div>
     </div>
 
@@ -286,12 +299,13 @@
                     <div id="editDrawer-label"><label>Laden:</label></div>
                 </div>
             </div>
-
-            <div class="saveButtonContainer"><button class="cancelBtn" onclick="cancel()">Abbrechen</button>   <button class="saveBtn" onclick="updateItem()">Speichern</button></div>
+            <button id="delBtn" onclick="deleteShelf()"><i class="fa-solid fa-trash" id="bin"></i> Löschen</button>
+            <div class="saveButtonContainer"><button class="cancelBtn" onclick="cancel()">Abbrechen</button>   <button class="saveBtn" onclick="updateShelf()">Speichern</button></div>
         </div>
     </div>
 
 <script th:inline="javascript">
+    const backendIP = "localhost:8080";
     const promptModal = document.getElementById("prompt");
     const editPromptModal = document.getElementById("editPrompt");
 
@@ -317,12 +331,11 @@
         let drawers = document.getElementsByClassName("drawer");
 
         Array.from(drawers).forEach(function(drawer) {
-            console.log(drawer.id +"--"+id);
             if(String(id) === drawer.id){
                 const editDrawerInputs = document.getElementById('editDrawerInputs');
                 const newDrawerInput = document.createElement('div');
                 newDrawerInput.classList.add('drawer-input');
-                newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" value='+drawer.innerText+' id='+drawer.name+'>';
+                newDrawerInput.innerHTML = '<input type="text" name="editDrawerName" class="editDrawerName" value='+drawer.innerText+' id='+drawer.name+'>';
                 editDrawerInputs.appendChild(newDrawerInput);
             }
         });
@@ -379,33 +392,96 @@
         location.reload();
     }
 
+    async function updateShelf(){
+        editPromptModal.style.display = "none";
+
+        let id = document.getElementById("shelfId").value;
+        let name = document.getElementById("shelfName").value;
+        let room = document.getElementById("shelfRoom").value;
+        let drawerInputs = Array.from(document.getElementsByClassName('editDrawerName'));
+        let drawerData = drawerInputs
+            .map(input => ({
+                id: input.id,
+                name: input.value.trim()
+            }))
+            .filter(drawer => drawer.name !== '');
+
+        const shelfData = {
+            id: id,
+            name: name,
+            room: room,
+            drawers: drawerData
+        };
+
+        // API-Call to update the shelf in the db
+        await fetch('/api/updateShelf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(shelfData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        document.getElementById("shelfName").value = null;
+        document.getElementById("shelfRoom").value = null;
+
+        location.reload();
+    }
+
+    async function deleteShelf(){
+        let id = document.getElementById("shelfId").value;
+        await fetch("http://" + backendIP + "/api/deleteShelf?id=" + id, {method: "POST"});
+
+        location.reload();
+    }
+
     function cancel() {
         document.getElementById("newShelfName").value = null;
         document.getElementById("newShelfRoom").value = null;
 
-        const drawerInputs = document.getElementById('drawerInputs');
+        let drawerInputs = document.getElementById('drawerInputs');
         drawerInputs.innerHTML = '<div id="drawer-label"><label>Laden:</label></div>';
-        const newDrawerInput = document.createElement('div');
+        let newDrawerInput = document.createElement('div');
         newDrawerInput.classList.add('drawer-input');
         newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
         drawerInputs.appendChild(newDrawerInput);
 
+        let editDrawerInputs = document.getElementById('editDrawerInputs');
+        editDrawerInputs.innerHTML = '<div id="editDrawer-label"><label>Laden:</label></div>';
+
         promptModal.style.display = "none";
+        editPromptModal.style.display = "none";
     }
 
     window.onclick = function(event) {
-        if (event.target === promptModal) {
+        if (event.target === promptModal || event.target === editPromptModal) {
             document.getElementById("newShelfName").value = null;
             document.getElementById("newShelfRoom").value = null;
 
-            const drawerInputs = document.getElementById('drawerInputs');
+            let drawerInputs = document.getElementById('drawerInputs');
             drawerInputs.innerHTML = '<div id="drawer-label"><label>Laden:</label></div>';
-            const newDrawerInput = document.createElement('div');
+            let newDrawerInput = document.createElement('div');
             newDrawerInput.classList.add('drawer-input');
             newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
             drawerInputs.appendChild(newDrawerInput);
 
+            let editDrawerInputs = document.getElementById('editDrawerInputs');
+            editDrawerInputs.innerHTML = '<div id="editDrawer-label"><label>Laden:</label></div>';
+
             promptModal.style.display = "none";
+            editPromptModal.style.display = "none";
         }
     }
 

@@ -266,6 +266,20 @@ public class APIController {
             Shelf shelf = convertShelfDtoToShelf(shelfDto);
             shelf.setId(shelfDto.getId());
             Shelf createdShelf = shelfService.saveOrUpdate(shelf);
+
+            List<Drawer> drawers = shelfDto.getDrawers().stream()
+                    .map(drawerDto -> {
+                        Drawer drawer = new Drawer();
+                        drawer.setId(drawerDto.getId());
+                        drawer.setName(drawerDto.getName());
+                        return drawer;
+                    })
+                    .toList();
+
+            for (Drawer drawer : drawers){
+                drawer.setShelfId(createdShelf.getId());
+                drawerService.saveOrUpdate(drawer);
+            }
             if(createdShelf != null){
                 return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdShelf);
             }else{
