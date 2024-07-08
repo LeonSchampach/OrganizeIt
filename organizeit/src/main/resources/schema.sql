@@ -1,6 +1,6 @@
-DROP TABLE item;
-DROP TABLE drawer;
-DROP TABLE shelf;
+DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS drawer;
+DROP TABLE IF EXISTS shelf;
 
 CREATE TABLE /*IF NOT EXISTS*/ shelf (
                         id LONG NOT NULL AUTO_INCREMENT,
