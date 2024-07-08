@@ -205,15 +205,54 @@ public class APIController {
     @PostMapping("/createDrawer")
     public ResponseEntity<?> createDrawer(@RequestBody DrawerDto drawerDto) {
         try {
-            Drawer drawer = new Drawer();
-            drawer.setName(drawerDto.getName());
-            drawer.setShelfId(drawerDto.getShelfId());
-
+            Drawer drawer = convertDrawerDtoToDrawer(drawerDto);
             Drawer createdDrawer = drawerService.createDrawer(drawer);
             if(createdDrawer != null){
                 return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdDrawer);
             }else{
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
+     * Updates a drawer in the database.
+     *
+     * @param drawerDto        Dto with all the data of the drawer.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @PostMapping("/updateDrawer")
+    public ResponseEntity<?> updateDrawerName(@RequestBody DrawerDto drawerDto) {
+        try{
+            Drawer drawer = convertDrawerDtoToDrawer(drawerDto);
+            drawer.setId(drawerDto.getId());
+            Drawer createdDrawer = drawerService.saveOrUpdate(drawer);
+            if(createdDrawer != null){
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdDrawer);
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
+            }
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
+     * Deletes a drawer from the database.
+     *
+     * @param id        Id of the drawer that has to be deleted.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @PostMapping("/deleteDrawer")
+    public ResponseEntity<?> deleteDrawer(@RequestParam int id) {
+        try {
+            String response;
+            if (!(response = drawerService.deleteDrawer(id)).equals(ErrorMessages.INSTANCE.getInternalServerErrorString())) {
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(response);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
@@ -272,12 +311,12 @@ public class APIController {
                         Drawer drawer = new Drawer();
                         drawer.setId(drawerDto.getId());
                         drawer.setName(drawerDto.getName());
+                        drawer.setShelfId(shelfDto.getId());
                         return drawer;
                     })
                     .toList();
 
             for (Drawer drawer : drawers){
-                drawer.setShelfId(createdShelf.getId());
                 drawerService.saveOrUpdate(drawer);
             }
             if(createdShelf != null){
@@ -324,5 +363,12 @@ public class APIController {
         item.setQuantity(itemDto.getQuantity());
         item.setDrawerId(itemDto.getDrawerId());
         return item;
+    }
+
+    public Drawer convertDrawerDtoToDrawer(DrawerDto drawerDto){
+        Drawer drawer = new Drawer();
+        drawer.setName(drawerDto.getName());
+        drawer.setShelfId(drawerDto.getShelfId());
+        return drawer;
     }
 }

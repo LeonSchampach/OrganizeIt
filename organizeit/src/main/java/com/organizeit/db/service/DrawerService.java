@@ -6,6 +6,7 @@ import com.organizeit.db.repository.ItemRepository;
 import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.repository.DrawerRepository;
 import com.organizeit.db.repository.ShelfRepository;
+import com.organizeit.errorhandling.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,13 +45,21 @@ public class DrawerService {
     }
 
     //saving/updating a specific record
-    public void saveOrUpdate(Drawer drawer){
-        drawerRepository.save(drawer);
+    public Drawer saveOrUpdate(Drawer drawer){
+        return drawerRepository.save(drawer);
     }
 
     //deleting a specific record
-    public void deleteDrawer(int id){
-        drawerRepository.deleteById(id);
+    public String deleteDrawer(int id){
+        if(drawerRepository.findById(id).isPresent()){
+            itemRepository.deleteAll(itemRepository.findItemsByDrawerId(id));
+            drawerRepository.deleteById(id);
+
+            return "Drawer and associated Item entries deleted!";
+        }
+        else {
+            return ErrorMessages.INSTANCE.getInternalServerErrorString();
+        }
     }
 
     //Returns all Items for a specific record

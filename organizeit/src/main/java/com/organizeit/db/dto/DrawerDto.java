@@ -1,5 +1,9 @@
 package com.organizeit.db.dto;
 
+import com.organizeit.db.entity.Item;
+
+import java.util.List;
+
 public class DrawerDto {
     private int id;
     private String name;

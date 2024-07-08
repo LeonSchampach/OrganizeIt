@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>OrganizeIt</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body{
+        body, html{
             font-family: 'Courier New', Courier, monospace;
+            padding: 0;
+            margin: 0;
         }
         h1{
             text-align: center;
@@ -17,6 +18,20 @@
             font-size: 12pt;
             cursor: pointer;
             border: none;
+        }
+
+        /* Containers to manage the layout of the Back-Button and the rest of the page */
+        .container {
+            display: flex;
+            height: 100%;
+        }
+        .fixed {
+            width: 75px; /* Set the fixed width for the left and right divs */
+            box-sizing: border-box;
+        }
+        .flexible {
+            flex: 1; /* Takes up the remaining space */
+            box-sizing: border-box;
         }
 
         #addItemButton{
@@ -199,6 +214,7 @@
         }
 
         #backBtn{
+            z-index: 99;
             margin-top: 25px;
             margin-left: 20px;
         }
@@ -209,30 +225,26 @@
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="fixed"><button id="backBtn"><i id="backSymbol" class="fa-regular fa-circle-left"></i></button></div>
+        <div class="flexible">
+            <h1 th:text="${drawer.name}"></h1>
+            <button id="addItemButton" onclick="addItem()"><i class="fa-solid fa-plus"></i> Gegenstand hinzufügen</button>
 
-    <button id="backBtn"><i id="backSymbol" class="fa-regular fa-circle-left"></i></button>
-
-    <h1 th:text="${drawer.name}"></h1>
-    <button id="addItemButton" onclick="addItem()"><i class="fa-solid fa-plus"></i> Gegenstand hinzufügen</button>
-    <!--<div id="item-container">
-        <ul>
-            <li th:each="item : ${items}">
-                <p th:text="${item.name}"></p>
-            </li>
-        </ul>
-    </div>-->
-
-    <div id="item-container">
-        <div class="collapsible-container" th:each="item : ${items}">
-            <button class="collapsible">
-                <span class="arrow">&#9654;</span><span th:text="${item.name}" th:id="${item.id}"></span>
-            </button>
-            <div class="content" >
-                <span th:id="${item.id}+'_quantity'" th:text="'Menge: ' + ${item.quantity}"></span><br>
-                <span th:id="${item.id}+'_desc'" th:text="'Beschreibung: ' + ${item.desc}"></span><br>
-                <div id="outerDiv"><div id="listBtn-container"><button id="editBtn" th:onclick="'editItem('+${item.id}+')'"><i class="fa-solid fa-pen-to-square"></i> Bearbeiten</button><button id="deleteBtn" th:onclick="'deleteItem('+${item.id}+')'"><i class="fa-solid fa-trash" id="bin"></i> Löschen</button></div></div>
+            <div id="item-container">
+                <div class="collapsible-container" th:each="item : ${items}">
+                    <button class="collapsible">
+                        <span class="arrow">&#9654;</span><span th:text="${item.name}" th:id="${item.id}"></span>
+                    </button>
+                    <div class="content" >
+                        <span th:id="${item.id}+'_quantity'" th:text="'Menge: ' + ${item.quantity}"></span><br>
+                        <span th:id="${item.id}+'_desc'" th:text="'Beschreibung: ' + ${item.desc}"></span><br>
+                        <div id="outerDiv"><div id="listBtn-container"><button id="editBtn" th:onclick="'editItem('+${item.id}+')'"><i class="fa-solid fa-pen-to-square"></i> Bearbeiten</button><button id="deleteBtn" th:onclick="'deleteItem('+${item.id}+')'"><i class="fa-solid fa-trash" id="bin"></i> Löschen</button></div></div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="fixed"></div>
     </div>
 
     <div id="prompt" class="modal">

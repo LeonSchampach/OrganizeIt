@@ -22,6 +22,6 @@ CREATE TABLE /*IF NOT EXISTS*/ item (
                         desc VARCHAR(255),
                         quantity int NOT NULL,
                         drawer_id LONG,
-                        PRIMARY KEY (name),
+                        PRIMARY KEY (id),
                         CONSTRAINT fk_drawer FOREIGN KEY (drawer_id) REFERENCES drawer(id)
 );

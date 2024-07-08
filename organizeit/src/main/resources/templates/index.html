@@ -91,7 +91,6 @@
             font-family: 'Courier New', Courier, monospace;
             font-size: 12pt;
             border: none;
-            background-color: #f1f1f1;
             cursor: pointer;
             /*width: fit-content;
             padding: 5px 25px;
@@ -111,6 +110,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
         }
         #addShelfButton{
+            background-color: #f1f1f1;
             margin-left: 50%;
             transform: translate(-50%);
             margin-bottom: 25px;
@@ -121,10 +121,18 @@
             background-color: #dadada;
         }
         #addDrawerButton{
+            background-color: #e3e3e3;
             padding: 5px 10px;
         }
         #addDrawerButton:hover {
-            background-color: #dadada;
+            background-color: #d5d5d5;
+        }
+        #addDrawerButton2{
+            background-color: #e3e3e3;
+            padding: 5px 10px;
+        }
+        #addDrawerButton2:hover {
+            background-color: #d5d5d5;
         }
         .saveBtn{
             background-color: #2962ff;
@@ -144,7 +152,6 @@
             transform: translateY(-3px);
         }
         .saveButtonContainer{
-            margin-top: 15px;
             width: fit-content;
             height: fit-content;
         }
@@ -226,6 +233,17 @@
             color: dodgerblue;
         }
 
+        /* Delete Shelf Button in edit Shelf window */
+        #delShelfBtn-container{
+            width: 100%;
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
+
+            padding-bottom: 10px;
+            padding-top: 10px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
         #delBtn{
             background-color: red;
             color: white;
@@ -237,6 +255,11 @@
         #bin{
             color: #ffffff;
             transform: translateY(1px);
+        }
+
+        #delDrawerBtn{
+            background-color: white;
+            transform: translateY(2px);
         }
     </style>
 </head>
@@ -298,8 +321,9 @@
                 <div id="editDrawerInputs">
                     <div id="editDrawer-label"><label>Laden:</label></div>
                 </div>
+                <button type="button" id="addDrawerButton2"><i class="fa-solid fa-plus"></i> Lade hinzufügen</button>
             </div>
-            <button id="delBtn" onclick="deleteShelf()"><i class="fa-solid fa-trash" id="bin"></i> Löschen</button>
+            <div id="delShelfBtn-container"><button id="delBtn" onclick="deleteShelf()"><i class="fa-solid fa-trash" id="bin"></i> Regal Löschen</button></div>
             <div class="saveButtonContainer"><button class="cancelBtn" onclick="cancel()">Abbrechen</button>   <button class="saveBtn" onclick="updateShelf()">Speichern</button></div>
         </div>
     </div>
@@ -308,6 +332,8 @@
     const backendIP = "localhost:8080";
     const promptModal = document.getElementById("prompt");
     const editPromptModal = document.getElementById("editPrompt");
+
+    let localDrawerCount = 0;
 
     function addShelf(){
         promptModal.style.display = "block";
@@ -320,6 +346,22 @@
         newDrawerInput.innerHTML = '<input type="text" name="drawerName" class="drawerName" placeholder="Name der Lade">';
         drawerInputs.appendChild(newDrawerInput);
     });
+
+    document.getElementById('addDrawerButton2').addEventListener('click', function() {
+        localDrawerCount++;
+
+        const drawerInputs = document.getElementById('editDrawerInputs');
+        const newDrawerInput = document.createElement('div');
+        newDrawerInput.id = "localDrawerInput_"+String(localDrawerCount);
+        newDrawerInput.classList.add('drawer-input');
+        newDrawerInput.innerHTML = '<input type="text" class="editDrawerName" placeholder="Name der Lade" id="0">' +
+            '<button id="delDrawerBtn" onclick="deleteLocalDrawer('+localDrawerCount+')"><i class="fa-solid fa-xmark" style="color: #d10000;"></i></button>';
+        drawerInputs.appendChild(newDrawerInput);
+    });
+
+    function deleteLocalDrawer(id) {
+        document.getElementById("localDrawerInput_"+id).remove();
+    }
 
     function editShelf(id){
         editPromptModal.style.display = "block";
@@ -334,8 +376,10 @@
             if(String(id) === drawer.id){
                 const editDrawerInputs = document.getElementById('editDrawerInputs');
                 const newDrawerInput = document.createElement('div');
+                newDrawerInput.id = "drawerInput_"+drawer.name;
                 newDrawerInput.classList.add('drawer-input');
-                newDrawerInput.innerHTML = '<input type="text" name="editDrawerName" class="editDrawerName" value='+drawer.innerText+' id='+drawer.name+'>';
+                newDrawerInput.innerHTML = '<input type="text" name="editDrawerName" class="editDrawerName" value='+drawer.innerText+' id='+drawer.name+'>' +
+                    '<button id="delDrawerBtn" onclick="deleteDrawer('+drawer.name+')"><i class="fa-solid fa-xmark" style="color: #d10000;"></i></button>';
                 editDrawerInputs.appendChild(newDrawerInput);
             }
         });
@@ -445,6 +489,11 @@
         await fetch("http://" + backendIP + "/api/deleteShelf?id=" + id, {method: "POST"});
 
         location.reload();
+    }
+
+    async function deleteDrawer(id){
+        document.getElementById("drawerInput_"+id).remove();
+        await fetch("http://" + backendIP + "/api/deleteDrawer?id=" + id, {method: "POST"});
     }
 
     function cancel() {
