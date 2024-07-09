@@ -373,13 +373,17 @@
         let drawers = document.getElementsByClassName("drawer");
 
         Array.from(drawers).forEach(function(drawer) {
+            console.log(drawer.innerText);
             if(String(id) === drawer.id){
                 const editDrawerInputs = document.getElementById('editDrawerInputs');
                 const newDrawerInput = document.createElement('div');
                 newDrawerInput.id = "drawerInput_"+drawer.name;
                 newDrawerInput.classList.add('drawer-input');
-                newDrawerInput.innerHTML = '<input type="text" name="editDrawerName" class="editDrawerName" value='+drawer.innerText+' id='+drawer.name+'>' +
-                    '<button id="delDrawerBtn" onclick="deleteDrawer('+drawer.name+')"><i class="fa-solid fa-xmark" style="color: #d10000;"></i></button>';
+                newDrawerInput.innerHTML = `<input type="text" name="editDrawerName" class="editDrawerName" value="${drawer.innerText}" id="${drawer.name}">` +
+                    `<button id="delDrawerBtn" onclick="deleteDrawer('${drawer.name}')"><i class="fa-solid fa-xmark" style="color: #d10000;"></i></button>`;
+
+                console.log(newDrawerInput);
+
                 editDrawerInputs.appendChild(newDrawerInput);
             }
         });
