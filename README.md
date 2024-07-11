@@ -30,6 +30,7 @@ OrganizeIt is a Spring Boot application designed to help you organize your shelv
    ```bash
    git clone https://github.com/LeonSchampach/OrganizeIt.git
    cd OrganizeIt
+   ```
 
 2. **Build the project:**
 
