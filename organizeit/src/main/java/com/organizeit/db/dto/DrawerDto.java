@@ -9,6 +9,15 @@ public class DrawerDto {
     private String name;
     private int shelfId;
 
+    public DrawerDto(int id, String name, int shelfId) {
+        this.id = id;
+        this.name = name;
+        this.shelfId = shelfId;
+    }
+
+    public DrawerDto() {
+    }
+
     public int getId() {
         return id;
     }

@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,19 +115,45 @@ public class APIController {
     }*/
 
     /**
-     * Retrieves all books from the database.
+     * Retrieves all shelves from the database.
      *
      * @return A ResponseEntity containing a list of books or an appropriate error response.
      */
-    /*@GetMapping("/getAllBook")
-    public ResponseEntity<?> getBooks() {
+    @GetMapping("/getAllShelf")
+    public ResponseEntity<?> getShelves() {
         try {
-            List<Book> books = itemService.getAllBook();
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(books);
+            List<Shelf> shelves = shelfService.getAllShelf();
+            List<ShelfDto> shelfDtoList = new ArrayList<>();
+            for (Shelf shelf : shelves) {
+                ShelfDto shelfDto = new ShelfDto(shelf.getId(), shelf.getName(), shelf.getRoom());
+                List<Drawer> drawers = shelfService.getDrawersByShelfId(shelf.getId());
+                List<DrawerDto> drawerDtoList = new ArrayList<>();
+                for (Drawer drawer : drawers) {
+                    drawerDtoList.add(new DrawerDto(drawer.getId(), drawer.getName(), drawer.getShelfId()));
+                }
+                shelfDto.setDrawers(drawerDtoList);
+                shelfDtoList.add(shelfDto);
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfDtoList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
         }
-    }*/
+    }
+
+    /**
+     * Retrieves all items from the database.
+     *
+     * @return A ResponseEntity containing a list of books or an appropriate error response.
+     */
+    @GetMapping("/getAllItem")
+    public ResponseEntity<?> getItems() {
+        try {
+            List<Item> items = itemService.getAllItem();
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(items);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
 
     /**
      * Creates a new item in the database.

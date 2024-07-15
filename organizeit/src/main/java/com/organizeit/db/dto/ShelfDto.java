@@ -8,6 +8,15 @@ public class ShelfDto {
     private String room;
     private List<DrawerDto> drawers;
 
+    public ShelfDto(int id, String name, String room) {
+        this.id = id;
+        this.name = name;
+        this.room = room;
+    }
+
+    public ShelfDto() {
+    }
+
     public int getId() {
         return id;
     }
