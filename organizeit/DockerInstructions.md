@@ -85,7 +85,6 @@ Use a `.dockerignore` file to exclude files and directories that are not needed 
 image, similar to `.gitignore`.
 
 ```
-target/
 *.md
 *.iml
 .git
