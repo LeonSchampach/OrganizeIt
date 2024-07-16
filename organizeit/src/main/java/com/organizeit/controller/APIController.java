@@ -143,12 +143,13 @@ public class APIController {
     /**
      * Retrieves all items from the database.
      *
+     * @param drawerId          Id of the drawer whose items should be returned
      * @return A ResponseEntity containing a list of books or an appropriate error response.
      */
-    @GetMapping("/getAllItem")
-    public ResponseEntity<?> getItems() {
+    @GetMapping("/getItemsByDrawerId")
+    public ResponseEntity<?> getItems(@RequestParam int drawerId) {
         try {
-            List<Item> items = itemService.getAllItem();
+            List<Item> items = drawerService.getItemsByDrawerId(drawerId);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(items);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
