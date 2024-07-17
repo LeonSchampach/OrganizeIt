@@ -210,7 +210,7 @@ public class APIController {
      * @param id        Id of the item that has to be deleted.
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
-    @PostMapping("/deleteItem")
+    @DeleteMapping("/deleteItem")
     public ResponseEntity<?> deleteItem(@RequestParam int id) {
         try {
             String response;
