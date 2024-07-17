@@ -306,14 +306,19 @@ public class APIController {
                     })
                     .toList();
 
-            Shelf createdShelf = shelfService.createShelf(shelf);
-            for (Drawer drawer : drawers){
-                drawer.setShelfId(createdShelf.getId());
-                drawerService.createDrawer(drawer);
-            }
-            if(createdShelf != null){
-                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdShelf);
-            }else{
+            try{
+                Shelf createdShelf = shelfService.createShelf(shelf);
+                List<DrawerDto> createdDrawers = new ArrayList<>();
+                for (Drawer drawer : drawers){
+                    drawer.setShelfId(createdShelf.getId());
+                    Drawer createdDrawer = drawerService.createDrawer(drawer);
+                    createdDrawers.add(new DrawerDto(createdDrawer.getId(), createdDrawer.getName(), createdDrawer.getShelfId()));
+                }
+                ShelfDto responseShelfDto = new ShelfDto(createdShelf.getId(), createdShelf.getName(), createdShelf.getRoom());
+                responseShelfDto.setDrawers(createdDrawers);
+
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseShelfDto);
+            } catch (Exception e){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
             }
         } catch (Exception e){
