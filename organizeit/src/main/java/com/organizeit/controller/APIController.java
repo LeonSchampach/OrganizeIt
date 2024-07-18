@@ -273,7 +273,7 @@ public class APIController {
      * @param id        Id of the drawer that has to be deleted.
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
-    @PostMapping("/deleteDrawer")
+    @DeleteMapping("/deleteDrawer")
     public ResponseEntity<?> deleteDrawer(@RequestParam int id) {
         try {
             String response;
@@ -368,7 +368,7 @@ public class APIController {
      * @param id        Id of the shelf that has to be deleted.
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
-    @PostMapping("/deleteShelf")
+    @DeleteMapping("/deleteShelf")
     public ResponseEntity<?> deleteShelf(@RequestParam int id) {
         try {
             String response;
