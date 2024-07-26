@@ -3,6 +3,7 @@ package com.organizeit.db.service;
 import com.organizeit.db.dto.LoginDTO;
 import com.organizeit.db.dto.UserDTO;
 import com.organizeit.db.entity.User;
+import com.organizeit.db.entity.UserShelfList;
 import com.organizeit.db.repository.UserRepository;
 import com.organizeit.errorhandling.ErrorMessages;
 import com.organizeit.response.LoginResponse;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +37,8 @@ public class UserService {
      * @return A confirmation message if successful, or an error message if the user is not found.
      */
     public String deleteUser(int id) {
-        Optional<User> deleteuser = userRepository.findById(id);
-        if (deleteuser.isPresent()) {
+        Optional<User> deleteUser = userRepository.findById(id);
+        if (deleteUser.isPresent()) {
             userRepository.deleteById(id);
             return "User deleted!";
         } else {
@@ -60,7 +62,9 @@ public class UserService {
      * @return A List of all user entities.
      */
     public List<User> getAllUser() {
-        return userRepository.findAll();
+        List<User> users = new ArrayList<User>();
+        userRepository.findAll().forEach(users::add);
+        return users;
     }
 
     /**
@@ -71,40 +75,5 @@ public class UserService {
      */
     public User getUserById(int id) {
         return userRepository.findById(id).orElse(null); // Shorter version with Optional
-    }
-
-    /**
-     * Registers a new user. Encodes the password before saving.
-     *
-     * @param userDTO A userDTO object containing the user's registration data.
-     * @return A message indicating the success or failure of the registration.
-     */
-    public User registerUser(UserDTO userDTO) {
-        User existingUser = userRepository.findByMail(userDTO.getMail());
-        if (existingUser == null) {
-            String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-            User user = new User(userDTO.getFirstname(), userDTO.getLastname(), userDTO.getMail(), encodedPassword);
-            return userRepository.save(user);
-        }
-        return null;
-    }
-
-    /**
-     * Handles user login by comparing the provided credentials with
-     * a stored user's email and encoded password.
-     *
-     * @param loginDTO A LoginDTO object containing the user's email and password.
-     * @return A LoginResponse object indicating the success/failure of login and the user's ID (if successful).
-     */
-    public LoginResponse loginUser(LoginDTO loginDTO) {
-        User user = userRepository.findByMail(loginDTO.getMail());
-        if (user != null) {
-            if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-                return new LoginResponse("Login Success", true, user.getId());
-            } else {
-                return new LoginResponse("Login Failed", false);
-            }
-        }
-        return new LoginResponse("User does not exist", false);
     }
 }

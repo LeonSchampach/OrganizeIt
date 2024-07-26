@@ -1,11 +1,18 @@
+INSERT INTO SHELF_LIST (NAME) VALUES ('Liste 1');
+SET @listId = (SELECT ID FROM SHELF_LIST WHERE NAME = 'Liste 1');
+
+INSERT INTO END_USER () VALUES ();
+
+INSERT INTO REL_USER_LIST (USER_ID, LIST_ID) VALUES (1, 1);
+
 -- Insert data into the shelf table and capture the generated IDs using session variables
-INSERT INTO shelf (name, room) VALUES ('Schreibtisch', 'Leons Zimmer');
+INSERT INTO shelf (name, room, SHELF_LIST_ID) VALUES ('Schreibtisch', 'Leons Zimmer', @listId);
 SET @schreibtischId = (SELECT id FROM shelf WHERE name = 'Schreibtisch');
 
-INSERT INTO shelf (name, room) VALUES ('Shelf2', 'RoomB');
+INSERT INTO shelf (name, room, SHELF_LIST_ID) VALUES ('Shelf2', 'RoomB', @listId);
 SET @shelf2Id = (SELECT id FROM shelf WHERE name = 'Shelf2');
 
-INSERT INTO shelf (name, room) VALUES ('Shelf3', 'RoomC');
+INSERT INTO shelf (name, room, SHELF_LIST_ID) VALUES ('Shelf3', 'RoomC', @listId);
 SET @shelf3Id = (SELECT id FROM shelf WHERE name = 'Shelf3');
 
 -- Insert data into the drawer table using the captured shelf IDs
