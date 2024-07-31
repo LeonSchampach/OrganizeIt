@@ -6,12 +6,14 @@ public class ShelfDto {
     private int id;
     private String name;
     private String room;
+    private int shelfListId;
     private List<DrawerDto> drawers;
 
-    public ShelfDto(int id, String name, String room) {
+    public ShelfDto(int id, String name, String room, int shelfListId) {
         this.id = id;
         this.name = name;
         this.room = room;
+        this.shelfListId = shelfListId;
     }
 
     public ShelfDto() {
@@ -39,6 +41,14 @@ public class ShelfDto {
 
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public int getShelfListId() {
+        return shelfListId;
+    }
+
+    public void setShelfListId(int shelfListId) {
+        this.shelfListId = shelfListId;
     }
 
     public List<DrawerDto> getDrawers() {
