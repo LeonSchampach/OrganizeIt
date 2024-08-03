@@ -124,11 +124,18 @@ public class ShelfController {
             for (Drawer drawer : drawers){
                 drawerService.saveOrUpdate(drawer);
             }
-            if(createdShelf != null){
-                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createdShelf);
-            }else{
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getInternalServerErrorString());
+
+            List<DrawerDto> createdDrawers = new ArrayList<>();
+            for (Drawer drawer : drawers){
+                drawer.setShelfId(createdShelf.getId());
+                Drawer createdDrawer = drawerService.createDrawer(drawer);
+                createdDrawers.add(new DrawerDto(createdDrawer.getId(), createdDrawer.getName(), createdDrawer.getShelfId()));
             }
+
+            ShelfDto responseShelfDto = new ShelfDto(createdShelf.getId(), createdShelf.getName(), createdShelf.getRoom(), createdShelf.getShelfListId());
+            responseShelfDto.setDrawers(createdDrawers);
+
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseShelfDto);
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
         }
