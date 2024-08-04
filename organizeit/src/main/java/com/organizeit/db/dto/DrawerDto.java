@@ -8,6 +8,7 @@ public class DrawerDto {
     private int id;
     private String name;
     private int shelfId;
+    private List<ItemDto> items;
 
     public DrawerDto(int id, String name, int shelfId) {
         this.id = id;
@@ -40,5 +41,13 @@ public class DrawerDto {
 
     public void setShelfId(int shelfId) {
         this.shelfId = shelfId;
+    }
+
+    public List<ItemDto> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemDto> items) {
+        this.items = items;
     }
 }

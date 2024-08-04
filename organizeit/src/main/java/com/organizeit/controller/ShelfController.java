@@ -1,8 +1,10 @@
 package com.organizeit.controller;
 
 import com.organizeit.db.dto.DrawerDto;
+import com.organizeit.db.dto.ItemDto;
 import com.organizeit.db.dto.ShelfDto;
 import com.organizeit.db.entity.Drawer;
+import com.organizeit.db.entity.Item;
 import com.organizeit.db.entity.Shelf;
 import com.organizeit.db.repository.DrawerRepository;
 import com.organizeit.db.service.DrawerService;
@@ -48,7 +50,17 @@ public class ShelfController {
                 List<Drawer> drawers = shelfService.getDrawersByShelfId(shelf.getId());
                 List<DrawerDto> drawerDtoList = new ArrayList<>();
                 for (Drawer drawer : drawers) {
-                    drawerDtoList.add(new DrawerDto(drawer.getId(), drawer.getName(), drawer.getShelfId()));
+                    DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getShelfId());
+
+                    List<Item> items = drawerService.getItemsByDrawerId(drawer.getId());
+                    List<ItemDto> itemDtoList = new ArrayList<>();
+                    if (items != null) {
+                        for (Item item: items) {
+                            itemDtoList.add(new ItemDto(item.getId(), item.getName(), item.getDesc(), item.getQuantity(), item.getDrawerId()));
+                        }
+                        drawerDto.setItems(itemDtoList);
+                    }
+                    drawerDtoList.add(drawerDto);
                 }
                 shelfDto.setDrawers(drawerDtoList);
                 shelfDtoList.add(shelfDto);

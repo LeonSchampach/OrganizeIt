@@ -1,7 +1,6 @@
 package com.organizeit.db.service;
 
 import com.organizeit.db.entity.Item;
-import com.organizeit.db.entity.Shelf;
 import com.organizeit.db.repository.ItemRepository;
 import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.repository.DrawerRepository;
@@ -31,7 +30,7 @@ public class DrawerService {
 
     //getting all Drawer records
     public List<Drawer> getAllDrawer(){
-        List<Drawer> drawers = new ArrayList<Drawer>();
+        List<Drawer> drawers = new ArrayList<>();
         drawerRepository.findAll().forEach(drawers::add);
         return drawers;
     }

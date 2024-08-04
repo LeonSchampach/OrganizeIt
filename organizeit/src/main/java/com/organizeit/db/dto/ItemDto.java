@@ -11,6 +11,17 @@ public class ItemDto {
         return id;
     }
 
+    public ItemDto(int id, String name, String desc, float quantity, int drawerId) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.quantity = quantity;
+        this.drawerId = drawerId;
+    }
+
+    public ItemDto() {
+    }
+
     public void setId(int id) {
         this.id = id;
     }

@@ -1,5 +1,6 @@
 package com.organizeit.controller;
 
+import com.organizeit.db.dto.DrawerDto;
 import com.organizeit.db.dto.ItemDto;
 import com.organizeit.db.entity.Item;
 import com.organizeit.db.repository.DrawerRepository;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +37,26 @@ public class ItemController {
 
     @Autowired
     private DrawerRepository drawerRepository;
+
+    /**
+     * Retrieves all items from the database.
+     *
+     * @return A ResponseEntity containing a list of books or an appropriate error response.
+     */
+    @GetMapping("/getAllItem")
+    public ResponseEntity<?> getitems() {
+        try {
+            List<Item> items = itemService.getAllItem();
+            List<ItemDto> itemDtos = new ArrayList<>();
+            for (Item item : items) {
+                ItemDto itemDto = new ItemDto(item.getId(), item.getName(), item.getDesc(), item.getQuantity(), item.getDrawerId());
+                itemDtos.add(itemDto);
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(itemDtos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
 
     /**
      * Retrieves all items from the database.

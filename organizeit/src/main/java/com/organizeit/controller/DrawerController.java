@@ -1,7 +1,9 @@
 package com.organizeit.controller;
 
 import com.organizeit.db.dto.DrawerDto;
+import com.organizeit.db.dto.ItemDto;
 import com.organizeit.db.entity.Drawer;
+import com.organizeit.db.entity.Item;
 import com.organizeit.db.repository.DrawerRepository;
 import com.organizeit.db.service.DrawerService;
 import com.organizeit.db.service.ItemService;
@@ -12,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The DrawerController class handles HTTP requests related to drawer entities within
@@ -33,6 +38,36 @@ public class DrawerController {
 
     @Autowired
     private DrawerRepository drawerRepository;
+
+    /**
+     * Retrieves all drawers from the database.
+     *
+     * @return A ResponseEntity containing a list of books or an appropriate error response.
+     */
+    @GetMapping("/getAllDrawer")
+    public ResponseEntity<?> getDrawers() {
+        try {
+            List<Drawer> drawers = drawerService.getAllDrawer();
+            List<DrawerDto> drawerDtos = new ArrayList<>();
+            for (Drawer drawer : drawers) {
+                DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getShelfId());
+
+                List<Item> items = drawerService.getItemsByDrawerId(drawer.getId());
+                List<ItemDto> itemDtoList = new ArrayList<>();
+                if (items != null) {
+                    for (Item item: items) {
+                        itemDtoList.add(new ItemDto(item.getId(), item.getName(), item.getDesc(), item.getQuantity(), item.getDrawerId()));
+                    }
+                    drawerDto.setItems(itemDtoList);
+                }
+
+                drawerDtos.add(drawerDto);
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(drawerDtos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
 
     /**
      * Creates a new drawer in the database.
