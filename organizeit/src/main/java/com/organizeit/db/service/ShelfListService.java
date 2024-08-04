@@ -22,6 +22,10 @@ public class ShelfListService {
         return shelfListRepository.save(shelfList);
     }
 
+    public List<ShelfList> getAllShelfLists(){
+        return (List<ShelfList>) shelfListRepository.findAll();
+    }
+
     public List<ShelfList> getAllShelfListsByUserId(int userId) {
         List<ShelfList> allShelfLists = (List<ShelfList>) shelfListRepository.findAll();
         List<UserShelfList> allUserShelfLists = (List<UserShelfList>) userShelfListRepository.findAll();

@@ -25,6 +25,21 @@ public class ShelfListController {
     private ShelfListService shelfListService;
 
     /**
+     * Retrieves all shelf_lists from the database.
+     *
+     * @return A ResponseEntity containing a list of books or an appropriate error response.
+     */
+    @GetMapping("/getAllShelfList")
+    public ResponseEntity<?> getShelfList() {
+        try {
+            List<ShelfList> shelfLists = shelfListService.getAllShelfLists();
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfLists);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
      * Retrieves all shelf_lists for a specified user from the database.
      *
      * @param userId The id of the user.
