@@ -1,6 +1,5 @@
 package com.organizeit.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,7 +16,7 @@ public class Item {
     private String desc;
 
     @Column(name = "quantity")
-    private int quantity;
+    private float quantity;
 
     @Column(name = "drawerId", nullable = false)
     private int drawerId;
@@ -56,11 +55,11 @@ public class Item {
         this.desc = desc;
     }
 
-    public int getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 

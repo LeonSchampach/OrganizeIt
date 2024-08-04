@@ -4,7 +4,7 @@ public class ItemDto {
     private int id;
     private String name;
     private String desc;
-    private int quantity;
+    private float quantity;
     private int drawerId;
 
     public int getId() {
@@ -31,11 +31,11 @@ public class ItemDto {
         this.desc = desc;
     }
 
-    public int getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
