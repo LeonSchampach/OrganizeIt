@@ -17,10 +17,13 @@ import java.util.List;
 public class ShelfService {
     @Autowired
     private ShelfRepository shelfRepository;
+
     @Autowired
     private DrawerRepository drawerRepository;
+
     @Autowired
     private ItemRepository itemRepository;
+
 
     @Transactional
     public Shelf createShelf(Shelf shelf) {

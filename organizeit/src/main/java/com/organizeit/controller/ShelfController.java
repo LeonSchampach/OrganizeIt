@@ -6,7 +6,6 @@ import com.organizeit.db.dto.ShelfDto;
 import com.organizeit.db.entity.Drawer;
 import com.organizeit.db.entity.Item;
 import com.organizeit.db.entity.Shelf;
-import com.organizeit.db.repository.DrawerRepository;
 import com.organizeit.db.service.DrawerService;
 import com.organizeit.db.service.ItemService;
 import com.organizeit.db.service.ShelfService;
@@ -34,6 +33,9 @@ public class ShelfController {
 
     @Autowired
     private ShelfService shelfService;
+
+    @Autowired
+    private ItemService itemService;
 
     /**
      * Retrieves all shelves from the database.
@@ -64,6 +66,39 @@ public class ShelfController {
                 }
                 shelfDto.setDrawers(drawerDtoList);
                 shelfDtoList.add(shelfDto);
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfDtoList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    /**
+     * Imports a list of shelves into the database.
+     *
+     * @return A ResponseEntity containing a list of books or an appropriate error response.
+     */
+    @PostMapping("/importShelves")
+    public ResponseEntity<?> importShelves(@RequestBody List<ShelfDto> shelfDtoList) {
+        try {
+            for (ShelfDto shelfDto : shelfDtoList) {
+                Shelf createdShelf = shelfService.createShelf(convertShelfDtoToShelf(shelfDto));
+
+                if (shelfDto.getDrawers() != null) {
+                    for (DrawerDto drawerDto : shelfDto.getDrawers()) {
+                        Drawer drawer = convertDrawerDtoToDrawer(drawerDto);
+                        drawer.setShelfId(createdShelf.getId());
+                        Drawer createdDrawer = drawerService.createDrawer(drawer);
+
+                        if (drawerDto.getItems() != null) {
+                            for (ItemDto itemDto : drawerDto.getItems()) {
+                                Item item = convertItemDtoToItem(itemDto);
+                                item.setDrawerId(createdDrawer.getId());
+                                Item createdItem = itemService.createItem(item);
+                            }
+                        }
+                    }
+                }
             }
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfDtoList);
         } catch (Exception e) {
@@ -179,5 +214,21 @@ public class ShelfController {
         shelf.setRoom(shelfDto.getRoom());
         shelf.setShelfListId(shelfDto.getShelfListId());
         return shelf;
+    }
+
+    public Drawer convertDrawerDtoToDrawer(DrawerDto drawerDto){
+        Drawer drawer = new Drawer();
+        drawer.setName(drawerDto.getName());
+        drawer.setShelfId(drawerDto.getShelfId());
+        return drawer;
+    }
+
+    public Item convertItemDtoToItem(ItemDto itemDto){
+        Item item = new Item();
+        item.setName(itemDto.getName());
+        item.setDesc(itemDto.getDesc());
+        item.setQuantity(itemDto.getQuantity());
+        item.setDrawerId(itemDto.getDrawerId());
+        return item;
     }
 }
