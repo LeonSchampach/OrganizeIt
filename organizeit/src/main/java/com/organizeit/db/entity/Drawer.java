@@ -16,12 +16,16 @@ public class Drawer {
     @Column
     private String name;
 
+    @Column (name = "DRAWER_ORDER")
+    private int order;
+
     @Column(name = "shelf_id", nullable = false)
     private int shelfId;
 
     //Constructor
-    public Drawer(String name, int shelfId) {
+    public Drawer(String name, int order, int shelfId) {
         this.name = name;
+        this.order = order;
         this.shelfId = shelfId;
     }
     public Drawer(){
@@ -42,6 +46,14 @@ public class Drawer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public int getShelfId() {

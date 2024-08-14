@@ -50,7 +50,7 @@ public class DrawerController {
             List<Drawer> drawers = drawerService.getAllDrawer();
             List<DrawerDto> drawerDtos = new ArrayList<>();
             for (Drawer drawer : drawers) {
-                DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getShelfId());
+                DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getOrder(), drawer.getShelfId());
 
                 List<Item> items = drawerService.getItemsByDrawerId(drawer.getId());
                 List<ItemDto> itemDtoList = new ArrayList<>();

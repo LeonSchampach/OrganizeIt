@@ -51,18 +51,20 @@ public class ShelfController {
                 ShelfDto shelfDto = new ShelfDto(shelf.getId(), shelf.getName(), shelf.getRoom(), shelf.getShelfListId());
                 List<Drawer> drawers = shelfService.getDrawersByShelfId(shelf.getId());
                 List<DrawerDto> drawerDtoList = new ArrayList<>();
-                for (Drawer drawer : drawers) {
-                    DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getShelfId());
+                if (drawers != null) {
+                    for (Drawer drawer : drawers) {
+                        DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getOrder(), drawer.getShelfId());
 
-                    List<Item> items = drawerService.getItemsByDrawerId(drawer.getId());
-                    List<ItemDto> itemDtoList = new ArrayList<>();
-                    if (items != null) {
-                        for (Item item: items) {
-                            itemDtoList.add(new ItemDto(item.getId(), item.getName(), item.getDesc(), item.getQuantity(), item.getDrawerId()));
+                        List<Item> items = drawerService.getItemsByDrawerId(drawer.getId());
+                        List<ItemDto> itemDtoList = new ArrayList<>();
+                        if (items != null) {
+                            for (Item item: items) {
+                                itemDtoList.add(new ItemDto(item.getId(), item.getName(), item.getDesc(), item.getQuantity(), item.getDrawerId()));
+                            }
+                            drawerDto.setItems(itemDtoList);
                         }
-                        drawerDto.setItems(itemDtoList);
+                        drawerDtoList.add(drawerDto);
                     }
-                    drawerDtoList.add(drawerDto);
                 }
                 shelfDto.setDrawers(drawerDtoList);
                 shelfDtoList.add(shelfDto);
@@ -121,6 +123,7 @@ public class ShelfController {
                     .map(drawerDto -> {
                         Drawer drawer = new Drawer();
                         drawer.setName(drawerDto.getName());
+                        drawer.setOrder(drawerDto.getOrder());
                         return drawer;
                     })
                     .toList();
@@ -131,7 +134,7 @@ public class ShelfController {
                 for (Drawer drawer : drawers){
                     drawer.setShelfId(createdShelf.getId());
                     Drawer createdDrawer = drawerService.createDrawer(drawer);
-                    createdDrawers.add(new DrawerDto(createdDrawer.getId(), createdDrawer.getName(), createdDrawer.getShelfId()));
+                    createdDrawers.add(new DrawerDto(createdDrawer.getId(), createdDrawer.getName(), createdDrawer.getOrder(), createdDrawer.getShelfId()));
                 }
                 ShelfDto responseShelfDto = new ShelfDto(createdShelf.getId(), createdShelf.getName(), createdShelf.getRoom(), createdShelf.getShelfListId());
                 responseShelfDto.setDrawers(createdDrawers);
@@ -163,6 +166,7 @@ public class ShelfController {
                         Drawer drawer = new Drawer();
                         drawer.setId(drawerDto.getId());
                         drawer.setName(drawerDto.getName());
+                        drawer.setOrder(drawerDto.getOrder());
                         drawer.setShelfId(shelfDto.getId());
                         return drawer;
                     })
@@ -176,7 +180,7 @@ public class ShelfController {
             for (Drawer drawer : drawers){
                 drawer.setShelfId(createdShelf.getId());
                 Drawer createdDrawer = drawerService.createDrawer(drawer);
-                createdDrawers.add(new DrawerDto(createdDrawer.getId(), createdDrawer.getName(), createdDrawer.getShelfId()));
+                createdDrawers.add(new DrawerDto(createdDrawer.getId(), createdDrawer.getName(), createdDrawer.getOrder(), createdDrawer.getShelfId()));
             }
 
             ShelfDto responseShelfDto = new ShelfDto(createdShelf.getId(), createdShelf.getName(), createdShelf.getRoom(), createdShelf.getShelfListId());

@@ -4447,3 +4447,9 @@ INSERT INTO ITEM (NAME, DESC, QUANTITY, DRAWER_ID) VALUES ('Karotten', '', 1.0, 
 INSERT INTO ITEM (NAME, DESC, QUANTITY, DRAWER_ID) VALUES ('Limetten', '', 3.0, 15)
 INSERT INTO ITEM (NAME, DESC, QUANTITY, DRAWER_ID) VALUES ('Paprika rot', '', 2.0, 15)
 INSERT INTO ITEM (NAME, DESC, QUANTITY, DRAWER_ID) VALUES ('Zitronen', '', 9.0, 15) [42000-224]
+2024-08-10 12:53:04.389408+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select d1_0.id,d1_0.name,d1_0.[*]order,d1_0.shelf_id from drawer d1_0 where d1_0.shelf_id=?"; expected "identifier"; SQL statement:
+select d1_0.id,d1_0.name,d1_0.order,d1_0.shelf_id from drawer d1_0 where d1_0.shelf_id=? [42001-224]
+2024-08-10 12:54:18.841846+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select d1_0.id,d1_0.name,d1_0.[*]order,d1_0.shelf_id from drawer d1_0"; expected "identifier"; SQL statement:
+select d1_0.id,d1_0.name,d1_0.order,d1_0.shelf_id from drawer d1_0 [42001-224]

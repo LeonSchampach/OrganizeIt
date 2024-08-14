@@ -7,12 +7,14 @@ import java.util.List;
 public class DrawerDto {
     private int id;
     private String name;
+    private int order;
     private int shelfId;
     private List<ItemDto> items;
 
-    public DrawerDto(int id, String name, int shelfId) {
+    public DrawerDto(int id, String name, int order, int shelfId) {
         this.id = id;
         this.name = name;
+        this.order = order;
         this.shelfId = shelfId;
     }
 
@@ -33,6 +35,14 @@ public class DrawerDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public int getShelfId() {
