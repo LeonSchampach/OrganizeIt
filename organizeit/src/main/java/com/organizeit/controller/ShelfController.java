@@ -42,37 +42,56 @@ public class ShelfController {
      *
      * @return A ResponseEntity containing a list of books or an appropriate error response.
      */
-    @GetMapping("/getAllShelf")
+    @GetMapping("/getAllShelves")
     public ResponseEntity<?> getShelves() {
         try {
             List<Shelf> shelves = shelfService.getAllShelf();
-            List<ShelfDto> shelfDtoList = new ArrayList<>();
-            for (Shelf shelf : shelves) {
-                ShelfDto shelfDto = new ShelfDto(shelf.getId(), shelf.getName(), shelf.getRoom(), shelf.getShelfListId());
-                List<Drawer> drawers = shelfService.getDrawersByShelfId(shelf.getId());
-                List<DrawerDto> drawerDtoList = new ArrayList<>();
-                if (drawers != null) {
-                    for (Drawer drawer : drawers) {
-                        DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getOrder(), drawer.getShelfId());
-
-                        List<Item> items = drawerService.getItemsByDrawerId(drawer.getId());
-                        List<ItemDto> itemDtoList = new ArrayList<>();
-                        if (items != null) {
-                            for (Item item: items) {
-                                itemDtoList.add(new ItemDto(item.getId(), item.getName(), item.getDesc(), item.getQuantity(), item.getDrawerId()));
-                            }
-                            drawerDto.setItems(itemDtoList);
-                        }
-                        drawerDtoList.add(drawerDto);
-                    }
-                }
-                shelfDto.setDrawers(drawerDtoList);
-                shelfDtoList.add(shelfDto);
-            }
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfDtoList);
+            return buildShelf(shelves);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
         }
+    }
+
+    /**
+     * Retrieves all shelves from the database.
+     *
+     * @return A ResponseEntity containing a list of books or an appropriate error response.
+     */
+    @GetMapping("/getShelvesByShelfListId")
+    public ResponseEntity<?> getShelvesByShelfListId(@RequestParam int shelfListId) {
+        try {
+            List<Shelf> shelves = shelfService.getShelvesByShelfListId(shelfListId);
+            return buildShelf(shelves);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
+
+    private ResponseEntity<?> buildShelf(List<Shelf> shelves) {
+        List<ShelfDto> shelfDtoList = new ArrayList<>();
+        for (Shelf shelf : shelves) {
+            ShelfDto shelfDto = new ShelfDto(shelf.getId(), shelf.getName(), shelf.getRoom(), shelf.getShelfListId());
+            List<Drawer> drawers = shelfService.getDrawersByShelfId(shelf.getId());
+            List<DrawerDto> drawerDtoList = new ArrayList<>();
+            if (drawers != null) {
+                for (Drawer drawer : drawers) {
+                    DrawerDto drawerDto = new DrawerDto(drawer.getId(), drawer.getName(), drawer.getOrder(), drawer.getShelfId());
+
+                    List<Item> items = drawerService.getItemsByDrawerId(drawer.getId());
+                    List<ItemDto> itemDtoList = new ArrayList<>();
+                    if (items != null) {
+                        for (Item item: items) {
+                            itemDtoList.add(new ItemDto(item.getId(), item.getName(), item.getDesc(), item.getQuantity(), item.getDrawerId()));
+                        }
+                        drawerDto.setItems(itemDtoList);
+                    }
+                    drawerDtoList.add(drawerDto);
+                }
+            }
+            shelfDto.setDrawers(drawerDtoList);
+            shelfDtoList.add(shelfDto);
+        }
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfDtoList);
     }
 
     /**

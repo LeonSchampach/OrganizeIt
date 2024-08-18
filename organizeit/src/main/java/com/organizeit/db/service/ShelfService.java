@@ -37,6 +37,10 @@ public class ShelfService {
         return shelves;
     }
 
+    public List<Shelf> getShelvesByShelfListId(int id){
+        return new ArrayList<>(shelfRepository.findShelvesByShelfListId(id));
+    }
+
     //getting a specific record
     public Shelf getShelfById(int id){
         if(shelfRepository.findById(id).isEmpty()){
