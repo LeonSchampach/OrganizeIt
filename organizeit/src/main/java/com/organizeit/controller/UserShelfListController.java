@@ -27,7 +27,7 @@ public class UserShelfListController {
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
     @PostMapping("/createUserShelfList")
-    public ResponseEntity<?> createUserShelfList(@RequestParam int userId, @RequestParam int shelfListId) {
+    public ResponseEntity<?> createUserShelfList(@RequestParam long userId, @RequestParam long shelfListId) {
         try {
             UserShelfList userShelfList = userShelfListService.createUserShelfList(new UserShelfList(new UserShelfId(userId, shelfListId)));
             if(userShelfList != null)

@@ -9,11 +9,11 @@ import jakarta.persistence.*;
 public class UserShelfList {
     @Id
     @Column(name = "USER_ID")
-    private int userId;
+    private long userId;
 
     @Id
     @Column(name = "LIST_ID")
-    private int shelfListId;
+    private long shelfListId;
 
     public UserShelfList(UserShelfId userShelfId) {
         this.userId = userShelfId.getUserId();
@@ -23,19 +23,19 @@ public class UserShelfList {
     public UserShelfList() {
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    public int getShelfListId() {
+    public long getShelfListId() {
         return shelfListId;
     }
 
-    public void setShelfListId(int shelfListId) {
+    public void setShelfListId(long shelfListId) {
         this.shelfListId = shelfListId;
     }
 }

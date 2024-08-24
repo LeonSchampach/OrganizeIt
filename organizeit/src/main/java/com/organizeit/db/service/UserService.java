@@ -36,7 +36,7 @@ public class UserService {
      * @param id The ID of the user to delete.
      * @return A confirmation message if successful, or an error message if the user is not found.
      */
-    public String deleteUser(int id) {
+    public String deleteUser(long id) {
         Optional<User> deleteUser = userRepository.findById(id);
         if (deleteUser.isPresent()) {
             userRepository.deleteById(id);
@@ -73,7 +73,7 @@ public class UserService {
      * @param id The ID of the user to retrieve.
      * @return The user entity if found, or null if not found.
      */
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return userRepository.findById(id).orElse(null); // Shorter version with Optional
     }
 }

@@ -119,7 +119,7 @@ public class DrawerController {
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
     @DeleteMapping("/deleteDrawer")
-    public ResponseEntity<?> deleteDrawer(@RequestParam int id) {
+    public ResponseEntity<?> deleteDrawer(@RequestParam long id) {
         try {
             String response;
             if (!(response = drawerService.deleteDrawer(id)).equals(ErrorMessages.INSTANCE.getInternalServerErrorString())) {

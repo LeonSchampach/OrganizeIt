@@ -1,6 +1,5 @@
 package com.organizeit.controller;
 
-import com.organizeit.db.dto.DrawerDto;
 import com.organizeit.db.dto.ItemDto;
 import com.organizeit.db.entity.Item;
 import com.organizeit.db.repository.DrawerRepository;
@@ -65,7 +64,7 @@ public class ItemController {
      * @return A ResponseEntity containing a list of books or an appropriate error response.
      */
     @GetMapping("/getItemsByDrawerId")
-    public ResponseEntity<?> getItems(@RequestParam int drawerId) {
+    public ResponseEntity<?> getItems(@RequestParam long drawerId) {
         try {
             List<Item> items = drawerService.getItemsByDrawerId(drawerId);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(items);
@@ -129,7 +128,7 @@ public class ItemController {
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
     @DeleteMapping("/deleteItem")
-    public ResponseEntity<?> deleteItem(@RequestParam int id) {
+    public ResponseEntity<?> deleteItem(@RequestParam long id) {
         try {
             String response;
             if (!(response = itemService.deleteItem(id)).equals(ErrorMessages.INSTANCE.getInternalServerErrorString())) {

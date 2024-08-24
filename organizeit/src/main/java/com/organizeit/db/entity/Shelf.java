@@ -1,16 +1,13 @@
 package com.organizeit.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "SHELF")
 public class Shelf {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "name")
     private String name;
@@ -19,7 +16,7 @@ public class Shelf {
     private String room;
 
     @Column(name = "SHELF_LIST_ID")
-    private int shelfListId;
+    private long shelfListId;
 
     //Constructor
     public Shelf(String name, String room) {
@@ -38,11 +35,11 @@ public class Shelf {
     }
 
     // Getters and Setters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -62,11 +59,11 @@ public class Shelf {
         this.room = room;
     }
 
-    public int getShelfListId() {
+    public long getShelfListId() {
         return shelfListId;
     }
 
-    public void setShelfListId(int shelfListId) {
+    public void setShelfListId(long shelfListId) {
         this.shelfListId = shelfListId;
     }
 }

@@ -26,7 +26,7 @@ public class ShelfListService {
         return (List<ShelfList>) shelfListRepository.findAll();
     }
 
-    public List<ShelfList> getAllShelfListsByUserId(int userId) {
+    public List<ShelfList> getAllShelfListsByUserId(long userId) {
         List<ShelfList> allShelfLists = (List<ShelfList>) shelfListRepository.findAll();
         List<UserShelfList> allUserShelfLists = (List<UserShelfList>) userShelfListRepository.findAll();
 

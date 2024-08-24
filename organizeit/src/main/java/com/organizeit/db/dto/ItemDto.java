@@ -1,17 +1,17 @@
 package com.organizeit.db.dto;
 
 public class ItemDto {
-    private int id;
+    private long id;
     private String name;
     private String desc;
     private float quantity;
-    private int drawerId;
+    private long drawerId;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public ItemDto(int id, String name, String desc, float quantity, int drawerId) {
+    public ItemDto(long id, String name, String desc, float quantity, long drawerId) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -22,7 +22,7 @@ public class ItemDto {
     public ItemDto() {
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -50,11 +50,11 @@ public class ItemDto {
         this.quantity = quantity;
     }
 
-    public int getDrawerId() {
+    public long getDrawerId() {
         return drawerId;
     }
 
-    public void setDrawerId(int drawerId) {
+    public void setDrawerId(long drawerId) {
         this.drawerId = drawerId;
     }
 }

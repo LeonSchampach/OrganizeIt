@@ -3,13 +3,13 @@ package com.organizeit.db.dto;
 import java.util.List;
 
 public class ShelfDto {
-    private int id;
+    private long id;
     private String name;
     private String room;
-    private int shelfListId;
+    private long shelfListId;
     private List<DrawerDto> drawers;
 
-    public ShelfDto(int id, String name, String room, int shelfListId) {
+    public ShelfDto(long id, String name, String room, long shelfListId) {
         this.id = id;
         this.name = name;
         this.room = room;
@@ -19,11 +19,11 @@ public class ShelfDto {
     public ShelfDto() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -43,11 +43,11 @@ public class ShelfDto {
         this.room = room;
     }
 
-    public int getShelfListId() {
+    public long getShelfListId() {
         return shelfListId;
     }
 
-    public void setShelfListId(int shelfListId) {
+    public void setShelfListId(long shelfListId) {
         this.shelfListId = shelfListId;
     }
 

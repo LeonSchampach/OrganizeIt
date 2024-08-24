@@ -2,8 +2,6 @@ package com.organizeit.db.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 /**
  * The User class represents a User enrolled in the library system.
  */
@@ -13,7 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
 
     /**
@@ -27,7 +25,7 @@ public class User {
      *
      * @return The User's ID.
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface ShelfRepository extends CrudRepository<Shelf, Integer> {
-    List<Shelf> findShelvesByShelfListId(int id);
+public interface ShelfRepository extends CrudRepository<Shelf, Long> {
+    List<Shelf> findShelvesByShelfListId(long id);
 }

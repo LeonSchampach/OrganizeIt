@@ -46,7 +46,7 @@ public class ShelfListController {
      * @return A ResponseEntity containing a list of books or an appropriate error response.
      */
     @GetMapping("/getAllShelfListsByUserId")
-    public ResponseEntity<?> getShelfLists(@RequestParam int userId) {
+    public ResponseEntity<?> getShelfLists(@RequestParam long userId) {
         try {
             List<ShelfList> shelfLists = shelfListService.getAllShelfListsByUserId(userId);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfLists);

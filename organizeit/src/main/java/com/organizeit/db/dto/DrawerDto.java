@@ -1,17 +1,15 @@
 package com.organizeit.db.dto;
 
-import com.organizeit.db.entity.Item;
-
 import java.util.List;
 
 public class DrawerDto {
-    private int id;
+    private long id;
     private String name;
     private int order;
-    private int shelfId;
+    private long shelfId;
     private List<ItemDto> items;
 
-    public DrawerDto(int id, String name, int order, int shelfId) {
+    public DrawerDto(long id, String name, int order, long shelfId) {
         this.id = id;
         this.name = name;
         this.order = order;
@@ -21,11 +19,11 @@ public class DrawerDto {
     public DrawerDto() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -45,11 +43,11 @@ public class DrawerDto {
         this.order = order;
     }
 
-    public int getShelfId() {
+    public long getShelfId() {
         return shelfId;
     }
 
-    public void setShelfId(int shelfId) {
+    public void setShelfId(long shelfId) {
         this.shelfId = shelfId;
     }
 

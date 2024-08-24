@@ -37,7 +37,7 @@ public class DrawerService {
     }
 
     //getting a specific record
-    public Drawer getDrawerById(int id){
+    public Drawer getDrawerById(long id){
         if(drawerRepository.findById(id).isEmpty()){
             return null;
         }
@@ -50,7 +50,7 @@ public class DrawerService {
     }
 
     //deleting a specific record
-    public String deleteDrawer(int id){
+    public String deleteDrawer(long id){
         if(drawerRepository.findById(id).isPresent()){
             itemRepository.deleteAll(itemRepository.findItemsByDrawerId(id));
             drawerRepository.deleteById(id);
@@ -63,7 +63,7 @@ public class DrawerService {
     }
 
     //Returns all Items for a specific record
-    public List<Item> getItemsByDrawerId(int id) {
+    public List<Item> getItemsByDrawerId(long id) {
         if (!(itemRepository.findItemsByDrawerId(id).isEmpty())) {
             return itemRepository.findItemsByDrawerId(id);
         } else {

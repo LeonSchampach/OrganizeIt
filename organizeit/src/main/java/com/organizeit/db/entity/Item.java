@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "name")
     private String name;
@@ -19,7 +19,7 @@ public class Item {
     private float quantity;
 
     @Column(name = "drawerId", nullable = false)
-    private int drawerId;
+    private long drawerId;
 
     //Constructor
     public Item(String name, String desc, int drawerId) {
@@ -31,11 +31,11 @@ public class Item {
     }
 
     //Getters and Setters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -63,11 +63,11 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public int getDrawerId() {
+    public long getDrawerId() {
         return drawerId;
     }
 
-    public void setDrawerId(int drawerId) {
+    public void setDrawerId(long drawerId) {
         this.drawerId = drawerId;
     }
 }

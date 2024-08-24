@@ -32,7 +32,7 @@ public class ItemService {
     }
 
     //getting a specific record
-    public Item getItemById(int id){
+    public Item getItemById(long id){
         if(itemRepository.findById(id).isEmpty()){
             return null;
         }
@@ -47,7 +47,7 @@ public class ItemService {
     }
 
     //deleting a specific record
-    public String deleteItem(int id){
+    public String deleteItem(long id){
         if(itemRepository.findById(id).isPresent()){
             itemRepository.deleteById(id);
 

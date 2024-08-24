@@ -58,7 +58,7 @@ public class ShelfController {
      * @return A ResponseEntity containing a list of books or an appropriate error response.
      */
     @GetMapping("/getShelvesByShelfListId")
-    public ResponseEntity<?> getShelvesByShelfListId(@RequestParam int shelfListId) {
+    public ResponseEntity<?> getShelvesByShelfListId(@RequestParam long shelfListId) {
         try {
             List<Shelf> shelves = shelfService.getShelvesByShelfListId(shelfListId);
             return buildShelf(shelves);
@@ -218,7 +218,7 @@ public class ShelfController {
      * @return A ResponseEntity indicating success or an appropriate error response.
      */
     @DeleteMapping("/deleteShelf")
-    public ResponseEntity<?> deleteShelf(@RequestParam int id) {
+    public ResponseEntity<?> deleteShelf(@RequestParam long id) {
         try {
             String response;
             if (!(response = shelfService.deleteShelf(id)).equals(ErrorMessages.INSTANCE.getInternalServerErrorString())) {

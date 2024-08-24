@@ -1,17 +1,13 @@
 package com.organizeit.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table
 public class Drawer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column
     private String name;
@@ -20,7 +16,7 @@ public class Drawer {
     private int order;
 
     @Column(name = "shelf_id", nullable = false)
-    private int shelfId;
+    private long shelfId;
 
     //Constructor
     public Drawer(String name, int order, int shelfId) {
@@ -32,11 +28,11 @@ public class Drawer {
     }
 
     // Getters and Setters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -56,11 +52,11 @@ public class Drawer {
         this.order = order;
     }
 
-    public int getShelfId() {
+    public long getShelfId() {
         return shelfId;
     }
 
-    public void setShelfId(int shelfId) {
+    public void setShelfId(long shelfId) {
         this.shelfId = shelfId;
     }
 }

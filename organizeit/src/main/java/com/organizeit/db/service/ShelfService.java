@@ -37,12 +37,12 @@ public class ShelfService {
         return shelves;
     }
 
-    public List<Shelf> getShelvesByShelfListId(int id){
+    public List<Shelf> getShelvesByShelfListId(long id){
         return new ArrayList<>(shelfRepository.findShelvesByShelfListId(id));
     }
 
     //getting a specific record
-    public Shelf getShelfById(int id){
+    public Shelf getShelfById(long id){
         if(shelfRepository.findById(id).isEmpty()){
             return null;
         }
@@ -55,7 +55,7 @@ public class ShelfService {
     }
 
     //deleting a specific record
-    public String deleteShelf(int id){
+    public String deleteShelf(long id){
         if(shelfRepository.findById(id).isPresent()){
             List<Drawer> drawers = drawerRepository.findDrawersByShelfId(id);
             for (Drawer drawer : drawers){
@@ -72,7 +72,7 @@ public class ShelfService {
     }
 
     //Returns all Drawers for a specific record
-    public List<Drawer> getDrawersByShelfId(int id) {
+    public List<Drawer> getDrawersByShelfId(long id) {
         if (!(drawerRepository.findDrawersByShelfId(id).isEmpty())) {
             return drawerRepository.findDrawersByShelfId(id);
         } else {

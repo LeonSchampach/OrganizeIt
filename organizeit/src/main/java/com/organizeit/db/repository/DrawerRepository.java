@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface DrawerRepository extends CrudRepository<Drawer, Integer> {
-    List<Drawer> findDrawersByShelfId(int id);
+public interface DrawerRepository extends CrudRepository<Drawer, Long> {
+    List<Drawer> findDrawersByShelfId(long id);
 }

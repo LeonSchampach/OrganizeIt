@@ -9,12 +9,12 @@ import java.io.Serializable;
 public class UserShelfId implements Serializable {
 
     @Column(name = "USER_ID")
-    private int userId;
+    private long userId;
 
     @Column(name = "LIST_ID")
-    private int shelfListId;
+    private long shelfListId;
 
-    public UserShelfId(int userId, int shelfListId) {
+    public UserShelfId(long userId, long shelfListId) {
         this.userId = userId;
         this.shelfListId = shelfListId;
     }
@@ -22,19 +22,19 @@ public class UserShelfId implements Serializable {
     public UserShelfId() {
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    public int getShelfListId() {
+    public long getShelfListId() {
         return shelfListId;
     }
 
-    public void setShelfListId(int shelfListId) {
+    public void setShelfListId(long shelfListId) {
         this.shelfListId = shelfListId;
     }
 }

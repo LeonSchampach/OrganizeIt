@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class ShelfList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(nullable = false)
     private String name;
@@ -19,11 +19,11 @@ public class ShelfList {
     public ShelfList() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
