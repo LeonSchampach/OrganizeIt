@@ -20,7 +20,7 @@ public class ShortLinkController {
     public String generateShortLink(@RequestParam long listId) {
         String shortId = UUID.randomUUID().toString().substring(0, 8); // Generate a short ID
         linkMap.put(shortId, listId); // Map the short ID to the list ID
-        return "http://192.168.1.4:8080/l/" + shortId; // Return the short link
+        return "http://ec2-51-20-185-24.eu-north-1.compute.amazonaws.com/short-links/l/" + shortId; // Return the short link
     }
 
     // Endpoint to handle the redirection
