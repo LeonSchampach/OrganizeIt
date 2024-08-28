@@ -73,4 +73,20 @@ public class ShelfListController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
         }
     }
+
+    /**
+     * Deletes a ShelfList from the Database.
+     *
+     * @param listId The name of the ShelfList that is going to be deleted.
+     * @return A ResponseEntity indicating success or an appropriate error response.
+     */
+    @DeleteMapping("/deleteShelfList")
+    public ResponseEntity<?> createShelfList(@RequestParam long listId) {
+        try {
+            ShelfList shelfList = shelfListService.removeShelfListById(listId);
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(shelfList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(ErrorMessages.INSTANCE.getTryCatchErrorString());
+        }
+    }
 }

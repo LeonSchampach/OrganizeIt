@@ -4,6 +4,7 @@ import com.organizeit.db.entity.ShelfList;
 import com.organizeit.db.entity.UserShelfList;
 import com.organizeit.db.repository.ShelfListRepository;
 import com.organizeit.db.repository.UserShelfListRepository;
+import com.organizeit.errorhandling.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,20 @@ public class ShelfListService {
         }
 
         return shelfLists;
+    }
+
+    public ShelfList removeShelfListById(long listId) {
+        ShelfList shelfList = null;
+        if(shelfListRepository.findById(listId).isPresent()){
+            shelfList = shelfListRepository.findById(listId).get();
+            List<UserShelfList> userShelfLists = userShelfListRepository.findUserShelfListsByShelfListId(listId);
+            userShelfListRepository.deleteAll(userShelfLists);
+
+            // TODO: Delete All Shelves, Drawers and Items in this ShelfList
+
+            shelfListRepository.deleteById(listId);
+        }
+
+        return shelfList;
     }
 }
