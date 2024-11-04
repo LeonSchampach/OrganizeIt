@@ -76,56 +76,76 @@ OrganizeIt is a Spring Boot application designed to help you organize your shelv
 
  ## Example SQL Data
  
- Here are example `schema.sql` and `data.sql` files to initialize the H2 database.
+ Here is an example `schema.sql` file to initialize the H2 database.
  
  ❗ Note: At the moment the tables created in the `schema.sql` file get dropped after every restart for testing purposes. ❗
 
  `schema.sql`
  ```sql
-CREATE TABLE IF NOT EXISTS shelf (
-                       name VARCHAR(255) NOT NULL,
-                       room VARCHAR(255),
-                       PRIMARY KEY (name)
+DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS drawer;
+DROP TABLE IF EXISTS shelf;
+
+DROP TABLE IF EXISTS ITEM;
+DROP TABLE IF EXISTS DRAWER;
+DROP TABLE IF EXISTS SHELF;
+DROP TABLE IF EXISTS REL_USER_LIST;
+DROP TABLE IF EXISTS SHELF_LIST;
+DROP TABLE IF EXISTS END_USER;
+DROP TABLE IF EXISTS USER_ROLE;
+
+CREATE TABLE IF NOT EXISTS END_USER
+(
+    ID        BIGINT          NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (ID)
 );
 
-CREATE TABLE IF NOT EXISTS drawer (
-                        name VARCHAR(255) NOT NULL,
-                        shelf_name VARCHAR(255),
-                        PRIMARY KEY (name),
-                        CONSTRAINT fk_shelf FOREIGN KEY (shelf_name) REFERENCES shelf(name)
+CREATE TABLE IF NOT EXISTS SHELF_LIST (
+    ID BIGINT NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(255) NOT NULL
 );
-CREATE TABLE IF NOT EXISTS item (
-                        id LONG NOT NULL AUTO_INCREMENT,
-                        name VARCHAR(255) NOT NULL,
-                        desc VARCHAR(255),
-                        drawer_name VARCHAR(255),
-                        PRIMARY KEY (name),
-                        CONSTRAINT fk_drawer FOREIGN KEY (drawer_name) REFERENCES drawer(name)
+
+CREATE TABLE IF NOT EXISTS REL_USER_LIST (
+    USER_ID BIGINT NOT NULL,
+    LIST_ID BIGINT NOT NULL,
+    PRIMARY KEY (USER_ID, LIST_ID),
+    CONSTRAINT FK_USER_ID FOREIGN KEY (USER_ID) REFERENCES END_USER(ID),
+    CONSTRAINT FK_LIST_ID FOREIGN KEY (LIST_ID) REFERENCES SHELF_LIST(ID)
+);
+
+CREATE TABLE IF NOT EXISTS SHELF (
+    ID BIGINT NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(255) NOT NULL,
+    ROOM VARCHAR(255),
+    SHELF_LIST_ID BIGINT NOT NULL,
+    PRIMARY KEY (ID),
+    CONSTRAINT FK_SHELF_LIST FOREIGN KEY (SHELF_LIST_ID) REFERENCES SHELF_LIST(ID)
+);
+
+CREATE TABLE IF NOT EXISTS DRAWER (
+    ID BIGINT NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(255) NOT NULL,
+    DRAWER_ORDER INT NOT NULL,
+    SHELF_ID BIGINT,
+    PRIMARY KEY (ID),
+    CONSTRAINT FK_SHELF FOREIGN KEY (SHELF_ID) REFERENCES SHELF(ID)
+);
+
+CREATE TABLE IF NOT EXISTS ITEM (
+    ID BIGINT NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(255) NOT NULL,
+    DESC VARCHAR(255),
+    QUANTITY FLOAT NOT NULL,
+    DRAWER_ID BIGINT,
+    PRIMARY KEY (ID),
+    CONSTRAINT FK_DRAWER FOREIGN KEY (DRAWER_ID) REFERENCES DRAWER(ID)
 );
 ```
+
 
 `data.sql`
 
-This file is not necessary. If you dont want the database to have any data in the beginning you can leave the file empty or delete it.
- ```sql
--- Insert data into the shelf table
-INSERT INTO shelf (name, room) VALUES ('Shelf1', 'RoomA');
-INSERT INTO shelf (name, room) VALUES ('Shelf2', 'RoomB');
-INSERT INTO shelf (name, room) VALUES ('Shelf3', 'RoomC');
-
--- Insert data into the drawer table
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer1', 'Shelf1');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer2', 'Shelf1');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer3', 'Shelf2');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer4', 'Shelf2');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer5', 'Shelf3');
-INSERT INTO drawer (name, shelf_name) VALUES ('Drawer6', 'Shelf3');
-
--- Insert data into the item table
-INSERT INTO item (name, desc, drawer_name) VALUES ('Item1', 'Description1', 'Drawer1');
-INSERT INTO item (name, desc, drawer_name) VALUES ('Item2', 'Description2', 'Drawer2');
-INSERT INTO item (name, desc, drawer_name) VALUES ('Item3', 'Description3', 'Drawer3');
-```
+In this file data can be inserted everytime the application is started. If you dont want the database to have any data in the beginning you can leave the file empty or delete it.
 
 ## License
 
