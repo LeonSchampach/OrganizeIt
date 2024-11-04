@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS item (
 
 `data.sql`
 
-This file does is not necessary. If you dont want the database to have any data in the beginning you can leave the file empty or delete it.
+This file is not necessary. If you dont want the database to have any data in the beginning you can leave the file empty or delete it.
  ```sql
 -- Insert data into the shelf table
 INSERT INTO shelf (name, room) VALUES ('Shelf1', 'RoomA');
