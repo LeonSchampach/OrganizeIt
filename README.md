@@ -1,6 +1,6 @@
 # OrganizeIt
 
-OrganizeIt is a Spring Boot application designed to help you organize your shelves and drawers. It uses an H2 database for storage and provides a web interface to view and manage the contents of your shelves and drawers.
+OrganizeIt is a Spring Boot application designed to help you organize your shelves and drawers. It uses an H2 database for storage and provides endpoints to view and manage the contents of your shelves and drawers.
 
 ## Features
 
